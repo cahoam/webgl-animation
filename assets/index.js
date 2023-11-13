@@ -1,15 +1,33 @@
 const canvas = document.getElementById('canvas');
 const gl = canvas.getContext('webgl');
 const objectsToDraw = [];
+let angle = 0;
 
 if (!gl) {
     console.error('WebGL não está disponível.');
 }
 
 class DrawableObject {
-    constructor(vertices, drawType) {
+    constructor(vertices, drawType, translation = {x: 0, y: 0}, rotation = 0, scale = {x: 1, y: 1}) {
         this.vertices = vertices;
         this.drawType = drawType;
+        this.translation = translation;
+        this.rotation = rotation;
+        this.scale = scale;
+    }
+
+    setTranslation(x, y) {
+        this.translation.x = x;
+        this.translation.y = y;
+    }
+
+    setRotation(angle) {
+        this.rotation = angle;
+    }
+
+    setScale(x, y) {
+        this.scale.x = x;
+        this.scale.y = y;
     }
 }
 
@@ -37,8 +55,26 @@ function compileShader(source, type) {
 function initWebGL() {
     const vertexShaderSource = `
         attribute vec2 a_position;
+        uniform vec2 u_translation;
+        uniform float u_rotation;
+        uniform vec2 u_scale;
+
         void main() {
-            gl_Position = vec4(a_position, 0.0, 1.0);
+            // Aplicar escala
+            vec2 scaledPosition = a_position * u_scale;
+
+            // Aplicar rotação
+            float cosRot = cos(u_rotation);
+            float sinRot = sin(u_rotation);
+            vec2 rotatedPosition = vec2(
+                scaledPosition.x * cosRot - scaledPosition.y * sinRot,
+                scaledPosition.x * sinRot + scaledPosition.y * cosRot
+            );
+
+            // Aplicar translação
+            vec2 position = rotatedPosition + u_translation;
+
+            gl_Position = vec4(position, 0.0, 1.0);
         }
     `;
 
@@ -72,12 +108,27 @@ function drawObject(object) {
     const vertexBuffer = setupBuffer(object.vertices);
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.vertexAttribPointer(gl.getAttribLocation(shaderProgram, 'a_position'), 2, gl.FLOAT, false, 0, 0);
+
+    const u_translation = gl.getUniformLocation(shaderProgram, "u_translation");
+    gl.uniform2f(u_translation, object.translation.x, object.translation.y);
+
+    const u_rotation = gl.getUniformLocation(shaderProgram, "u_rotation");
+    gl.uniform1f(u_rotation, object.rotation);
+
+    const u_scale = gl.getUniformLocation(shaderProgram, "u_scale");
+    gl.uniform2f(u_scale, object.scale.x, object.scale.y);
+
     gl.drawArrays(object.drawType, 0, object.vertices.length / 2);
 }
 
 function render() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    objectsToDraw[0].setTranslation(Math.sin(angle), Math.cos(angle));
+    objectsToDraw[1].setTranslation(Math.cos(angle), Math.sin(angle));
+    angle += -0.01;
+
     objectsToDraw.forEach(drawObject);
     requestAnimationFrame(render);
 }
