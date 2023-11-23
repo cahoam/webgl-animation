@@ -80,11 +80,11 @@ function initWebGL() {
                 position.x * sinRot + position.y * cosRot
             );
         
+            position = position * u_scale;        
+        
             position = position + u_center;
         
             position = position + u_translation;
-        
-            position = position * u_scale;
         
             gl_Position = vec4(position, 0.0, 1.0);
             v_color = a_color;
