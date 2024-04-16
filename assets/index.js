@@ -3,6 +3,34 @@ const gl = canvas.getContext('webgl');
 const objectsToDraw = [];
 let angle = 0;
 
+let isCentering = true;
+
+function toggleCentering() {
+    isCentering = !isCentering;
+}
+
+function toggleSidebar() {
+    var button = document.querySelector(".button");
+    var main = document.querySelector(".sidebar");
+    var sidebarItems = document.querySelectorAll(".sidebar-item");
+    
+    button.classList.toggle("active");
+    main.classList.toggle("move-to-left");
+    sidebarItems.forEach(function(item) {
+        item.classList.toggle("active");
+    });
+}
+
+document.querySelector(".button").addEventListener("click", function() {
+    toggleSidebar();
+});
+
+document.addEventListener("keyup", function(e) {
+    if (e.key === "Escape" || e.code === "Escape") {
+        toggleSidebar();
+    }
+});
+
 if (!gl) {
     console.error('WebGL não está disponível.');
 }
@@ -69,9 +97,11 @@ function initWebGL() {
         uniform vec2 u_center;
         varying vec4 v_color;
         precision mediump float;
+        uniform bool isCenter;
         
         void main() {
-            vec2 position = a_position - u_center;
+            vec2 position;
+            position = isCenter ? a_position - u_center : position = a_position;
         
             float cosRot = cos(u_rotation);
             float sinRot = sin(u_rotation);
@@ -82,7 +112,9 @@ function initWebGL() {
         
             position = position * u_scale;        
         
-            position = position + u_center;
+            if (isCenter) {
+                position = position + u_center;
+            }
         
             position = position + u_translation;
         
@@ -136,6 +168,9 @@ function drawObject(object) {
 
     const u_scale = gl.getUniformLocation(shaderProgram, "u_scale");
     gl.uniform2f(u_scale, object.scale.x, object.scale.y);
+
+    const isCenter = gl.getUniformLocation(shaderProgram, "isCenter");
+    gl.uniform1f(isCenter, isCentering);
 
     gl.drawArrays(object.drawType, 0, object.vertices.length / 2);
 
