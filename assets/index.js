@@ -2,6 +2,7 @@ const canvas = document.getElementById('canvas');
 const gl = canvas.getContext('webgl');
 const objectsToDraw = [];
 let angle = 0;
+let numberOfElements = 0;
 
 let isCentering = true;
 
@@ -11,14 +12,33 @@ function toggleCentering() {
 
 function toggleSidebar() {
     var button = document.querySelector(".button");
-    var main = document.querySelector(".sidebar");
+    var sidebar = document.querySelector(".sidebar");
     var sidebarItems = document.querySelectorAll(".sidebar-item");
     
     button.classList.toggle("active");
-    main.classList.toggle("move-to-left");
+    sidebar.classList.toggle("move-to-left");
     sidebarItems.forEach(function(item) {
         item.classList.toggle("active");
     });
+}
+
+function addElement() {
+    const root = document.getElementById('elements');
+    root.innerHTML += elementoWebGL(numberOfElements++);
+}
+
+function removeElement(id) {
+    document.getElementById(`element-${id}`).remove();
+    const root = document.getElementById('elements');
+    const elements = root.querySelectorAll(':scope > div');
+    elements.forEach((e, i) => {
+        e.id = `element-${i}`;
+        e.querySelector('button').onclick = () => {
+            removeElement(i);
+        }
+    });
+
+    numberOfElements--;
 }
 
 document.querySelector(".button").addEventListener("click", function() {
