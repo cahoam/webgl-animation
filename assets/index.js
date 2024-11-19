@@ -192,8 +192,6 @@ function drawObject(object) {
     const isCenter = gl.getUniformLocation(shaderProgram, "isCenter");
     gl.uniform1f(isCenter, isCentering);
 
-    gl.drawArrays(object.drawType, 0, object.vertices.length / 2);
-
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.colors), gl.STATIC_DRAW);
@@ -201,6 +199,8 @@ function drawObject(object) {
     const colorAttributeLocation = gl.getAttribLocation(shaderProgram, 'a_color');
     gl.enableVertexAttribArray(colorAttributeLocation);
     gl.vertexAttribPointer(colorAttributeLocation, 4, gl.FLOAT, false, 0, 0);    
+    
+    gl.drawArrays(object.drawType, 0, object.vertices.length / 2);
 }
 
 function render() {
