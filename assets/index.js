@@ -44,15 +44,34 @@ function generateColorMatrix(polNumberVertices) {
     return matrixColor;
 }
 
+function animation(id){
+    const x = document.getElementById('x' + id);
+    const y = document.getElementById('y' + id);
+    const e = document.getElementById('e' + id);
+    const r = document.getElementById('r' + id);
+
+    objectsToDraw[id].setAnimation(
+        parseFloat(x.value), 
+        parseFloat(y.value),
+        parseFloat(e.value),
+        parseFloat(e.value),
+        parseFloat(r.value)
+    );
+}
+
 function removeElement(id) {
     document.getElementById(`element-${id}`).remove();
     const root = document.getElementById('elements');
     const elements = root.querySelectorAll(':scope > div');
     elements.forEach((e, i) => {
         e.id = `element-${i}`;
-        e.querySelector('button').onclick = () => {
-            removeElement(i);
-        }
+        e.querySelector('button').onclick = () => removeElement(i);
+        const elementsInput = root.querySelectorAll(`#element-${i} input`);
+        elementsInput.forEach(input => {
+            input.id = input.id.substring(0,1) + i;
+            input.onchange = () => animation(i);
+            input.onkeypress = () => animation(i);
+        });
     });
     
     objectsToDraw.splice(id, 1)
@@ -74,13 +93,14 @@ if (!gl) {
 }
 
 class DrawableObject {
-    constructor(vertices, colors, drawType, translation = {x: 0, y: 0}, rotation = 0, scale = {x: 1, y: 1}) {
+    constructor(vertices, colors, drawType, translation = {x: 0, y: 0}, rotation = 0, scale = {x: 1, y: 1}, animation = {x: 0, y: 0, ex: 0, ey: 0, r: 0}) {
         this.vertices = vertices;
         this.colors = colors;
         this.drawType = drawType;
         this.translation = translation;
         this.rotation = rotation;
         this.scale = scale;
+        this.animation = animation;
         this.calculateCenter(this.vertices);
     }
 
@@ -96,6 +116,14 @@ class DrawableObject {
     setScale(x, y) {
         this.scale.x = x;
         this.scale.y = y;
+    }
+
+    setAnimation(x, y, ex, ey, r) {
+        this.animation.x = x;
+        this.animation.y = y;
+        this.animation.ex = ex;
+        this.animation.ey = ey;
+        this.animation.r = r;
     }
 
     calculateCenter() {
@@ -225,12 +253,7 @@ function render() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    objectsToDraw[0].setTranslation(Math.sin(angle)/7, Math.max(0, Math.cos(angle)/7));
-    objectsToDraw[1].setTranslation(Math.sin(angle + Math.PI)/14, Math.max(0, Math.cos(angle + Math.PI)/7));
-    objectsToDraw[2].setTranslation(0,  Math.cos((angle * 2) + 0.2)/15);
-    objectsToDraw[3].setTranslation(0,  Math.cos(angle * 2)/12);
-    objectsToDraw[4].setTranslation(-Math.cos(angle + Math.PI)/8,   Math.cos((angle * 2) + 0.2)/15);
-    objectsToDraw[4].setRotation(-Math.cos(angle + Math.PI) * (Math.PI / 8))
+    runAnimation();
 
     if (Math.cos(angle) > 0) {
         objectsToDraw[0].setRotation(Math.cos((angle * 2) - (Math.PI / 2)) * Math.PI/4);
@@ -244,6 +267,20 @@ function render() {
 
     objectsToDraw.forEach(drawObject);
     requestAnimationFrame(render);
+}
+
+function runAnimation() {
+    for(let object of objectsToDraw) {
+        let currentX = object.translation.x + object.animation.x;
+        let currentY = object.translation.y + object.animation.y;
+        let currentEX = object.scale.x + object.animation.ex;
+        let currentEY = object.scale.y + object.animation.ey;
+        let currentR = object.rotation + object.animation.r;
+
+        object.setTranslation(currentX, currentY);
+        object.setScale(currentEX, currentEY);
+        object.setRotation(currentR);
+    }
 }
 
 function calculateCenter(vertices) {

@@ -2,26 +2,26 @@ const elementoWebGL = (id) => `
     <div class="element" id="element-${id}">
         <div class="form-line">
             <div class="form-group">
-                <span>A</span>
-                <input class="form-field" type="number" value="0" min="0">
+                <span>X</span>
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="x${id}" onkeypress="animation(${id})" onchange="animation(${id})">
             </div>
             <div class="form-group">
-                <span>L</span>
-                <input class="form-field" type="number" value="0" min="0">
+                <span>Y</span>
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="y${id}" onkeypress="animation(${id})" onchange="animation(${id})">
             </div>    
             <div class="form-group">
-                <span>V</span>
-                <input class="form-field" type="number" value="0" min="0">
+                <span>E</span>
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="e${id}" onkeypress="animation(${id})" onchange="animation(${id})">
             </div>    
         </div>
         <div class="form-line">
             <div class="form-group">
-                <span>X</span>
-                <input class="form-field" type="number" value="0" min="-1">
+                <span>R</span>
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="r${id}" onkeypress="animation(${id})" onchange="animation(${id})">
             </div>
             <div class="form-group">
-                <span>Y</span>
-                <input class="form-field" type="number" value="0" min="-1">
+                <span>K</span>
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="k${id}" onkeypress="animation(${id})" onchange="animation(${id})">
             </div>    
             <button class="delete-element" onClick="removeElement(${id})">
                 <img src="./assets/icon-delete.svg" height="20"/>
