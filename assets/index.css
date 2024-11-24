@@ -224,7 +224,7 @@ body .form-group {
 }
 
 body .form-line:not(:last-child) {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 body .elements {
@@ -234,6 +234,8 @@ body .elements {
 body .elements .element {
     margin-bottom: 20px;
     padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 5px;
     border: 1px solid #aaa;
     border-radius: 7px;
 }
@@ -243,4 +245,16 @@ body .elements .element {
     background-color: red;
     border: 0;
     border-radius: 4px;
+}
+
+div.listButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+div.listButtons button {
+    border: solid 1px #aaa;
+    border-radius: 5px;
+    width: 78px;
 }

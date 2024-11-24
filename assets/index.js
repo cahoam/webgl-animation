@@ -22,9 +22,26 @@ function toggleSidebar() {
     });
 }
 
-function addElement() {
+function addElement(pol) {
+    const colorMatrix = generateColorMatrix(poligons[pol].length/2 + 1);
+    objectsToDraw.push(new DrawableObject(poligons[pol], colorMatrix, gl.TRIANGLE_FAN));
+
     const root = document.getElementById('elements');
     root.innerHTML += elementoWebGL(numberOfElements++);
+}
+
+function generateColorMatrix(polNumberVertices) {
+    const matrixColor = [];
+
+    const colorR = Math.random();
+    const colorG = Math.random();
+    const colorB = Math.random();
+
+    for (let i = 0 ; i < polNumberVertices ; i++) {
+        matrixColor.push(...[colorR, colorG, colorB, 1,]);
+    }    
+
+    return matrixColor;
 }
 
 function removeElement(id) {
@@ -37,7 +54,8 @@ function removeElement(id) {
             removeElement(i);
         }
     });
-
+    
+    objectsToDraw.splice(id, 1)
     numberOfElements--;
 }
 
