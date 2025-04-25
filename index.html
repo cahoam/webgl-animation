@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computação Gráfica com Álgebra Linear</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #fff;
+      --card-bg: #fff;
+      --text-color: #222;
+      --accent-color: #000;
+      --border-radius: 1rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #000;
+    }
+
+    main {
+      padding: 2rem 1rem;
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    section {
+      padding: 1.5rem;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--accent-color);
+    }
+
+    p {
+        margin-bottom: 1rem;
+        text-indent:50px;
+        text-align: justify;
+    }
+
+    iframe {
+      transform: translateX(-140px);
+      width: 1100px;
+      height: 700px;
+      border: none;
+    }
+
+    /* @media (min-width: 600px) {
+      iframe {
+        height: 400px;
+      }
+    } */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Explorando a Computação Gráfica com Álgebra Linear</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Álgebra Linear, as bases da computação gráfica</h2>
+      <p>
+        Nesta página, entenderá como a álgebra linear, uma área da matemática que lida com vetores e matrizes, é o coração por trás da 
+        computação gráfica, animações 2D e 3D, jogos, filmes e simulações que vemos todos os dias. Desde o movimento de um personagem em 
+        um videogame até a rotação de um planeta em uma simulação, tudo começa com conceitos matemáticos simples.
+      </p>
+      <p>
+        Você já se perguntou como um objeto 3D gira, escala ou se move em uma cena virtual? A resposta está na álgebra linear, que permite 
+        aos computadores manipular formas, posições e perspectivas com precisão. Aqui, vamos explorar passo a passo como esses conceitos 
+        matemáticos ganham vida em gráficos interativos, com animações práticas para ilustrar cada ideia.
+      </p>
+      <iframe src="./index.html" title="Animação de Vetores"></iframe>
+    </section>
+
+    <section>
+      <h2>Vetores</h2>
+      <p>
+        Na álgebra linear, tudo começa com vetores. Um vetor é uma entidade matemática que representa tanto uma posição quanto uma direção 
+        no espaço. Pense nele como uma flecha: ele tem um ponto de origem, uma direção para onde aponta e um tamanho (magnitude). Em termos 
+        simples, vetores são os blocos de construção para descrever onde os objetos estão e como eles se movem.
+      </p>
+    </section>
+
+    <section>
+      <h2>Experiência Interativa</h2>
+      <p>
+        Experimente a interatividade ao vivo com vértices e transformações. Com WebGL, é possível criar visualizações altamente dinâmicas e envolventes.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
+
+<!--
+
+Aqui está um roteiro claro e progressivo para organizar seu conteúdo na página. Ele introduz o tema, explica os conceitos passo a passo,
+e indica onde mostrar suas animações WebGL:
+
+---
+
+### 🧭 **Roteiro Didático – Computação Gráfica com Álgebra Linear**
+
+---
+
+#### **1. Introdução**
+- **Objetivo da página:** mostrar como a álgebra linear é o alicerce da computação gráfica moderna.
+- **Contexto prático:** tudo o que vemos em animações 2D/3D, jogos e simulações parte de conceitos matemáticos simples como vetores e matrizes.
+- **Gancho inicial:** "Você já se perguntou como um objeto 3D gira, escala ou se move numa cena virtual? A resposta está na matemática!"
+
+---
+
+#### **2. Vetores: A Base da Geometria Computacional**
+- **Conceito:** o que é um vetor (posição e direção).
+- **Aplicações:** representação de pontos, direções de movimento, forças, cores (RGB como vetores).
+- **Animação 1:** `vetores.html`  
+  Demonstre como vetores são usados para posicionar objetos.
+
+---
+
+#### **3. Matrizes: Transformando o Espaço**
+- **Conceito:** introdução à multiplicação de vetores por matrizes.
+- **Transformações básicas:**
+  - **Translação**
+  - **Rotação**
+  - **Escala**
+- **Importância da ordem das transformações.**
+- **Animação 2:** `matrizes.html`  
+  Mostre como cada transformação afeta o objeto.
+
+---
+
+#### **4. Composição de Transformações**
+- **Multiplicação de várias matrizes para animar objetos.**
+- **Stack de transformações no pipeline gráfico.**
+- **Homogeneização com coordenadas 3D (matriz 4x4).**
+
+---
+
+#### **5. Do Modelo ao Mundo: Pipeline Gráfico**
+- **Explicação de como o objeto passa por coordenadas de modelo → mundo → câmera → tela.**
+- **Conceito de projeção (perspectiva e ortográfica).**
+
+---
+
+#### **6. Interatividade e Animações em Tempo Real**
+- **WebGL:** como a álgebra linear entra em cena para gerar gráficos em tempo real.
+- **Conceitos de shaders e buffers, onde a matemática é processada na GPU.**
+- **Animação 3:** `interactive.html`  
+  Experiência onde o visitante interage com os vetores/matrizes.
+
+---
+
+#### **7. Conclusão**
+- **Resumo da importância da álgebra linear.**
+- **Reforço visual: tudo que foi mostrado é resultado direto da aplicação matemática.**
+- **Convite para explorar mais:** simulações físicas, engines gráficas, computação 3D em geral.
+
+---
+
+Se quiser, posso estruturar isso direto como conteúdo na página com seções novas, ou até adicionar botões, ícones, ou navegação lateral.
+Quer que eu monte isso já dentro do HTML?
+
+-->
