@@ -255,6 +255,13 @@ function render() {
 
     runAnimation();
 
+    objectsToDraw[0].setTranslation(Math.sin(angle)/7, Math.max(0, Math.cos(angle)/7));
+    objectsToDraw[1].setTranslation(Math.sin(angle + Math.PI)/14, Math.max(0, Math.cos(angle + Math.PI)/7));
+    objectsToDraw[2].setTranslation(0,  Math.cos((angle * 2) + 0.2)/15);
+    objectsToDraw[3].setTranslation(0,  Math.cos(angle * 2)/12);
+    objectsToDraw[4].setTranslation(-Math.cos(angle + Math.PI)/8,   Math.cos((angle * 2) + 0.2)/15);
+    objectsToDraw[4].setRotation(-Math.cos(angle + Math.PI) * (Math.PI / 8))
+
     if (Math.cos(angle) > 0) {
         objectsToDraw[0].setRotation(Math.cos((angle * 2) - (Math.PI / 2)) * Math.PI/4);
         objectsToDraw[1].setRotation(0);
@@ -344,7 +351,7 @@ const brown = [
 
 const shaderProgram = initWebGL();
 objectsToDraw.push(new DrawableObject(firstFeet, brown, gl.TRIANGLE_FAN));
-objectsToDraw.push(new DrawableObject(secondFeet, white, gl.TRIANGLE_FAN));
+objectsToDraw.push(new DrawableObject(secondFeet, brown, gl.TRIANGLE_FAN));
 objectsToDraw.push(new DrawableObject(tronco, white, gl.TRIANGLE_FAN));
 objectsToDraw.push(new DrawableObject(cabeca, brown, gl.TRIANGLE_FAN));
 objectsToDraw.push(new DrawableObject(hand, brown, gl.TRIANGLE_FAN));

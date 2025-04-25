@@ -109,10 +109,6 @@ canvas {
     transition: all .7s ease;
 }
 
-nav {
-    padding-top: 30px;
-}
-
 .sidebar-list {
     padding: 0;
     margin: 0;
