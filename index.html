@@ -3,185 +3,993 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Computação Gráfica com Álgebra Linear</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Álgebra Linear e Computação Gráfica | UFT</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     :root {
-      --bg-color: #fff;
-      --card-bg: #fff;
-      --text-color: #222;
-      --accent-color: #000;
-      --border-radius: 1rem;
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --accent: #0f172a;
+      --gold: #b8860b;
+      --bg-white: #ffffff;
+      --bg-light: #f8fafc;
+      --bg-cream: #fefdfb;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
+      font-family: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+      background: var(--bg-cream);
+      color: var(--text-primary);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* Progress Bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--primary);
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.1s ease;
+    }
+
+    /* Table of Contents Sidebar */
+    .toc-sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg-white);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 2rem 0;
+      z-index: 100;
+      transition: transform 0.3s ease, width 0.3s ease;
+    }
+
+    .toc-sidebar.collapsed {
+      transform: translateX(-280px);
+    }
+
+    .toc-header {
+      padding: 0 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .toc-title {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .toc-progress {
+      margin-top: 0.75rem;
+      height: 4px;
+      background: var(--bg-light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .toc-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      width: 0%;
+      transition: width 0.2s ease;
+      border-radius: 2px;
+    }
+
+    .toc-nav {
+      padding: 1rem 0;
+    }
+
+    .toc-item {
+      position: relative;
+      padding: 0.5rem 1.5rem;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      line-height: 1.4;
+    }
+
+    .toc-item:hover {
+      color: var(--primary);
+      background: var(--bg-light);
+    }
+
+    .toc-item.active {
+      color: var(--primary);
+      background: var(--bg-light);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    .toc-item-number {
+      display: inline-block;
+      min-width: 1.5rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8125rem;
+    }
+
+    .toc-subsection {
+      padding-left: 3rem;
+      font-size: 0.8125rem;
+    }
+
+    .toc-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 101;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .toc-toggle:hover {
+      background: var(--primary-light);
+    }
+
+    .toc-collapse-btn {
+      position: fixed;
+      left: 290px;
+      top: 1rem;
+      z-index: 101;
+      background: var(--bg-white);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: left 0.3s ease;
+    }
+
+    .toc-collapse-btn:hover {
+      background: var(--bg-light);
+      border-color: var(--primary);
+    }
+
+    .toc-collapse-btn.collapsed {
+      left: 1rem;
+    }
+
+    body.has-toc.sidebar-collapsed {
+      margin-left: 0;
+    }
+
+    /* Institutional Header */
+    .institutional-header {
+      background: var(--bg-white);
+      border-bottom: 3px solid var(--primary);
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .institutional-info {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .institution-name {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+
+    .course-info {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    /* Main Header */
     header {
-      padding: 2rem 1rem;
+      background: var(--bg-white);
+      padding: 4rem 2rem 3rem;
       text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-category {
+      display: inline-block;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--gold);
     }
 
     header h1 {
-      margin: 0;
-      font-size: 2rem;
-      color: #000;
+      font-family: 'IBM Plex Serif', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .header-subtitle {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    .author-info {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    .author-info strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Main Container */
+    body.has-toc {
+      margin-left: 280px;
     }
 
     main {
-      padding: 2rem 1rem;
-      max-width: 900px;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      background: var(--bg-white);
     }
 
-    section {
-      padding: 1.5rem;
+    /* Sections */
+    article {
+      margin-bottom: 4rem;
+      position: relative;
     }
 
+    /* Section Numbers */
+    .section-label {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    /* Typography */
     h2 {
-      margin-top: 0;
-      color: var(--accent-color);
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 2.5rem 0 1.25rem;
+      line-height: 1.4;
     }
 
     p {
-        margin-bottom: 1rem;
-        text-indent:50px;
-        text-align: justify;
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      text-align: justify;
+      hyphens: auto;
     }
 
-    iframe {
-      transform: translateX(-140px);
-      width: 1100px;
-      height: 700px;
+    p strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Academic Quote Box */
+    .theorem-box, .definition-box {
+      background: var(--bg-light);
+      border-left: 4px solid var(--primary);
+      padding: 1.75rem 2rem;
+      margin: 2.5rem 0;
+      position: relative;
+    }
+
+    .theorem-box::before {
+      content: 'Nota';
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      position: absolute;
+      top: -0.75rem;
+      left: 1.5rem;
+      background: var(--bg-light);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-box p, .definition-box p {
+      margin: 0;
+      text-align: left;
+      font-size: 1rem;
+    }
+
+    /* Figure Container */
+    .figure-container {
+      margin: 3rem 0;
+      text-align: center;
+    }
+
+    .figure-wrapper {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .figure-wrapper img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .figure-caption {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    .figure-caption strong {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-style: normal;
+    }
+
+    /* Interactive Demo */
+    .demo-section {
+      margin: 4rem 0;
+      padding: 2rem;
+      background: var(--bg-light);
+      border: 1px solid var(--border-dark);
+    }
+
+    .demo-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-header h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.25rem;
+    }
+
+    .demo-description {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .demo-container {
+      background: #000;
+      border: 2px solid var(--border-dark);
+      overflow: hidden;
+    }
+
+    .demo-container iframe {
+      width: 100%;
+      height: 600px;
       border: none;
+      display: block;
     }
 
-    /* @media (min-width: 600px) {
-      iframe {
+    /* Transformation Cards */
+    .transformation-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .transform-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      padding: 1.75rem 1.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .transform-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
+    }
+
+    .transform-card h4 {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .transform-card p {
+      font-size: 0.9375rem;
+      margin: 0;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    /* Mathematical Expression */
+    .math-block {
+      margin: 2.5rem 0;
+      padding: 2rem;
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    /* Divider */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4rem 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--accent);
+      color: #cbd5e1;
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 0.9375rem;
+      line-height: 1.8;
+    }
+
+    .footer-content p {
+      color: #cbd5e1;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .footer-content strong {
+      color: #f8fafc;
+      font-weight: 600;
+    }
+
+    .footer-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      margin: 1.5rem auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .toc-sidebar {
+        transform: translateX(-100%);
+      }
+
+      .toc-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .toc-toggle {
+        display: block;
+      }
+
+      .toc-collapse-btn {
+        display: none;
+      }
+
+      body.has-toc {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .institutional-info {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .course-info {
+        text-align: center;
+      }
+
+      header {
+        padding: 3rem 1.5rem 2rem;
+      }
+
+      main {
+        padding: 3rem 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+      }
+
+      .transformation-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-container iframe {
         height: 400px;
       }
-    } */
+    }
+
+    /* Print Styles */
+    @media print {
+      .progress-bar, .demo-container, .toc-sidebar, .toc-toggle {
+        display: none;
+      }
+
+      body, body.has-toc {
+        background: white;
+        margin-left: 0;
+      }
+
+      main {
+        max-width: 100%;
+      }
+    }
+
+    /* Subtle animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    article {
+      animation: fadeIn 0.6s ease-out backwards;
+    }
+
+    article:nth-child(1) { animation-delay: 0.1s; }
+    article:nth-child(2) { animation-delay: 0.2s; }
+    article:nth-child(3) { animation-delay: 0.3s; }
+    article:nth-child(4) { animation-delay: 0.4s; }
   </style>
 </head>
-<body>
+<body class="has-toc">
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Toggle Button for Mobile -->
+  <button class="toc-toggle" id="tocToggle" aria-label="Toggle menu">☰</button>
+
+  <!-- Collapse Button for Desktop -->
+  <button class="toc-collapse-btn" id="tocCollapseBtn" aria-label="Recolher/Expandir menu" title="Recolher/Expandir menu">◀</button>
+
+  <!-- Table of Contents Sidebar -->
+  <aside class="toc-sidebar" id="tocSidebar">
+    <div class="toc-header">
+      <div class="toc-title">Conteúdo</div>
+      <div class="toc-progress">
+        <div class="toc-progress-fill" id="tocProgressFill"></div>
+      </div>
+    </div>
+    <nav class="toc-nav">
+      <a href="#secao1" class="toc-item" data-section="1">
+        <span class="toc-item-number">1</span>
+        Introdução
+      </a>
+      <a href="#secao2" class="toc-item" data-section="2">
+        <span class="toc-item-number">2</span>
+        Conceitos Preliminares
+      </a>
+      <a href="#secao2-1" class="toc-item toc-subsection" data-section="2.1">
+        <span class="toc-item-number">2.1</span>
+        Estrutura do Espaço Bidimensional
+      </a>
+      <a href="#secao3" class="toc-item" data-section="3">
+        <span class="toc-item-number">3</span>
+        Transformações Lineares
+      </a>
+      <a href="#secao3-1" class="toc-item toc-subsection" data-section="3.1">
+        <span class="toc-item-number">3.1</span>
+        Transformações Fundamentais
+      </a>
+      <a href="#secao3-2" class="toc-item toc-subsection" data-section="3.2">
+        <span class="toc-item-number">3.2</span>
+        Matriz de Rotação no Plano
+      </a>
+      <a href="#secao4" class="toc-item" data-section="4">
+        <span class="toc-item-number">4</span>
+        Implementação e Resultados
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Header -->
   <header>
-    <h1>Explorando a Computação Gráfica com Álgebra Linear</h1>
+    <div class="header-category">Computação Gráfica • Álgebra Linear</div>
+    <h1>Álgebra Linear e Computação Gráfica:<br>Um Estudo Prático com Animação em WebGL</h1>
+    <p class="header-subtitle">
+      Uma ferramenta pedagógica interativa para exploração das transformações lineares 
+      e geométricas aplicadas à renderização gráfica
+    </p>
+    <div class="author-info">
+      <strong>Autor:</strong> Calebe Holanda Amaral<br>
+      <strong>Orientadora:</strong> Profa. Dra. Hellena Christina Fernandes Apolinário<br>
+    </div>
   </header>
 
+  <!-- Main Content -->
   <main>
-    <section>
-      <h2>Álgebra Linear, as bases da computação gráfica</h2>
+    <!-- Introdução -->
+    <article id="secao1">
+      <span class="section-label">1. Introdução</span>
+      <h2>Fundamentos Matemáticos da Computação Gráfica</h2>
+      
       <p>
-        Nesta página, entenderá como a álgebra linear, uma área da matemática que lida com vetores e matrizes, é o coração por trás da 
-        computação gráfica, animações 2D e 3D, jogos, filmes e simulações que vemos todos os dias. Desde o movimento de um personagem em 
-        um videogame até a rotação de um planeta em uma simulação, tudo começa com conceitos matemáticos simples.
+        A computação gráfica moderna fundamenta-se na aplicação sistemática de conceitos da álgebra linear 
+        para representação e manipulação de objetos geométricos no espaço bidimensional e tridimensional. 
+        Esta intersecção entre matemática pura e ciência aplicada possibilita a criação de ambientes virtuais 
+        complexos, desde jogos eletrônicos até simulações científicas de alta fidelidade.
       </p>
-      <p>
-        Você já se perguntou como um objeto 3D gira, escala ou se move em uma cena virtual? A resposta está na álgebra linear, que permite 
-        aos computadores manipular formas, posições e perspectivas com precisão. Aqui, vamos explorar passo a passo como esses conceitos 
-        matemáticos ganham vida em gráficos interativos, com animações práticas para ilustrar cada ideia.
-      </p>
-      <iframe src="./index.html" title="Animação de Vetores"></iframe>
-    </section>
 
-    <section>
-      <h2>Vetores</h2>
       <p>
-        Na álgebra linear, tudo começa com vetores. Um vetor é uma entidade matemática que representa tanto uma posição quanto uma direção 
-        no espaço. Pense nele como uma flecha: ele tem um ponto de origem, uma direção para onde aponta e um tamanho (magnitude). Em termos 
-        simples, vetores são os blocos de construção para descrever onde os objetos estão e como eles se movem.
+        Conforme estabelecido por <strong>Gomes e Velho (2015)</strong>, a computação gráfica pode ser 
+        compreendida como um conjunto de métodos e técnicas para transformação de dados em imagens através 
+        de dispositivos gráficos. Neste contexto, a álgebra linear fornece o arcabouço matemático essencial 
+        para operações de transformação, projeção e renderização.
       </p>
-    </section>
 
-    <section>
-      <h2>Experiência Interativa</h2>
       <p>
-        Experimente a interatividade ao vivo com vértices e transformações. Com WebGL, é possível criar visualizações altamente dinâmicas e envolventes.
+        Cada pixel visualizado em uma tela, cada rotação de câmera em um jogo, cada transformação de um 
+        personagem animado — todas estas operações são fundamentadas em cálculos com vetores e matrizes. 
+        A álgebra linear fornece a linguagem matemática precisa que permite aos computadores manipularem 
+        objetos geométricos de forma eficiente e determinística.
       </p>
-    </section>
+
+      <div class="theorem-box">
+        <p>
+          <strong>WebGL (Web Graphics Library)</strong> é uma API JavaScript para renderização de gráficos 
+          2D e 3D interativos em navegadores web sem uso de plugins. Baseada no OpenGL ES 2.0, permite 
+          acesso direto à GPU para processamento paralelo de operações matriciais, possibilitando renderização 
+          em tempo real de cenas complexas com milhões de cálculos por segundo.
+        </p>
+      </div>
+    </article>
+
+    <!-- Sistema de Coordenadas -->
+    <article id="secao2">
+      <span class="section-label">2. Conceitos Preliminares</span>
+      <h2>Sistema de Coordenadas Cartesianas</h2>
+
+      <p>
+        O sistema de coordenadas cartesianas, desenvolvido por René Descartes no século XVII e formalizado
+        em sua obra <em>La Géométrie</em> (1637), representa um marco fundamental na história da matemática
+        ao estabelecer uma correspondência biunívoca entre geometria e álgebra. Este sistema possibilita a
+        descrição analítica de objetos geométricos através de coordenadas numéricas.
+      </p>
+
+      <h3 id="secao2-1">2.1 Estrutura do Espaço Bidimensional</h3>
+
+      <p>
+        No espaço euclidiano bidimensional, denotado por ℝ², cada ponto P é univocamente determinado por 
+        um par ordenado de coordenadas (x, y), onde x ∈ ℝ representa a abscissa e y ∈ ℝ a ordenada. 
+        A origem do sistema, denotada por O = (0, 0), corresponde à interseção dos eixos coordenados 
+        ortogonais.
+      </p>
+
+      <div class="figure-container">
+        <div class="figure-wrapper">
+          <img src="./assets/images/plano.png" alt="Sistema de Coordenadas Cartesianas" width="500">
+        </div>
+        <p class="figure-caption">
+          <strong>Figura 1.</strong> Representação do plano cartesiano ℝ² com eixos ortogonais e pontos 
+          identificados por coordenadas (x, y).
+        </p>
+      </div>
+
+      <p>
+        Este sistema permite não apenas a localização de pontos, mas também a execução de operações 
+        geométricas fundamentais de forma algébrica. A distância euclidiana entre dois pontos 
+        P₁ = (x₁, y₁) e P₂ = (x₂, y₂), por exemplo, é calculada pela métrica:
+      </p>
+
+      <div class="math-block">
+        $$d(P_1, P_2) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
+      </div>
+
+      <div class="theorem-box">
+        <p>
+          <strong>Extensão para ℝ³:</strong> Em computação gráfica tridimensional, cada vértice de um 
+          objeto é representado por coordenadas (x, y, z) no espaço ℝ³, onde z representa a profundidade. 
+          Esta extensão mantém as propriedades fundamentais do sistema cartesiano, permitindo operações 
+          análogas em dimensão superior.
+        </p>
+      </div>
+    </article>
+
+    <div class="section-divider"></div>
+
+    <!-- Transformações -->
+    <article id="secao3">
+      <span class="section-label">3. Transformações Lineares</span>
+      <h2>Matrizes e Transformações Geométricas</h2>
+
+      <p>
+        As matrizes constituem estruturas algébricas fundamentais para a representação e composição de
+        transformações geométricas. Conforme <strong>Steinbruch (2009)</strong>, uma matriz de ordem
+        m × n é um arranjo retangular de elementos dispostos em m linhas e n colunas, permitindo a
+        codificação compacta de sistemas de equações lineares e transformações do espaço.
+      </p>
+
+      <h3 id="secao3-1">3.1 Transformações Lineares Fundamentais</h3>
+
+      <p>
+        Uma transformação linear T: ℝⁿ → ℝⁿ satisfaz as propriedades de aditividade e homogeneidade, 
+        podendo ser representada por uma matriz canônica [T] que codifica completamente seu comportamento. 
+        Na computação gráfica, quatro classes de transformações são particularmente relevantes:
+      </p>
+
+      <div class="transformation-grid">
+        <div class="transform-card">
+          <h4>Rotação</h4>
+          <p>
+            Transformação que gira vetores em torno de um ponto fixo (no plano) ou eixo (no espaço) 
+            por um ângulo θ, preservando distâncias e ângulos.
+          </p>
+        </div>
+        <div class="transform-card">
+          <h4>Escala</h4>
+          <p>
+            Transformação que altera as dimensões de objetos por fatores multiplicativos, podendo ser 
+            uniforme (mesma escala em todas as direções) ou não-uniforme.
+          </p>
+        </div>
+        <div class="transform-card">
+          <h4>Translação</h4>
+          <p>
+            Transformação afim que desloca objetos no espaço por um vetor de deslocamento constante, 
+            sem alterar orientação ou dimensões.
+          </p>
+        </div>
+        <div class="transform-card">
+          <h4>Reflexão</h4>
+          <p>
+            Transformação que espelha objetos em relação a um eixo (2D) ou plano (3D), invertendo 
+            uma ou mais coordenadas.
+          </p>
+        </div>
+      </div>
+
+      <h3 id="secao3-2">3.2 Matriz de Rotação no Plano</h3>
+
+      <p>
+        A transformação de rotação por um ângulo θ no sentido anti-horário em torno da origem no 
+        plano ℝ² é expressa pela matriz canônica:
+      </p>
+
+      <div class="math-block">
+        $$R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$$
+      </div>
+
+      <p>
+        A multiplicação desta matriz por um vetor coluna [x, y]ᵀ produz as novas coordenadas do ponto 
+        rotacionado, demonstrando a elegância da representação matricial para transformações geométricas.
+      </p>
+
+      <div class="theorem-box">
+        <p>
+          <strong>Eficiência Computacional:</strong> As GPUs (Graphics Processing Units) são arquiteturas 
+          especializadas em operações matriciais paralelas, executando milhares de multiplicações 
+          matriz-vetor simultaneamente. Esta característica torna a representação matricial não apenas 
+          matematicamente elegante, mas também computacionalmente ótima para processamento gráfico em 
+          tempo real.
+        </p>
+      </div>
+    </article>
+
+    <!-- Demonstração Interativa -->
+    <article id="secao4">
+      <span class="section-label">4. Implementação e Resultados</span>
+      <h2>Ferramenta Pedagógica Interativa</h2>
+      
+      <p>
+        Esta seção apresenta uma implementação prática dos conceitos teóricos discutidos, desenvolvida 
+        utilizando a API WebGL para renderização gráfica em tempo real. A ferramenta permite a 
+        visualização dinâmica de transformações lineares aplicadas a objetos geométricos, estabelecendo 
+        uma conexão direta entre a teoria matemática e sua aplicação computacional.
+      </p>
+
+      <div class="demo-section">
+        <div class="demo-header">
+          <h3>Demonstração: Transformações Lineares no Plano</h3>
+          <p class="demo-description">
+            A aplicação abaixo demonstra interativamente as transformações lineares estudadas. 
+            Utilize os controles para aplicar rotações, escalas e translações, observando em tempo 
+            real o efeito das operações matriciais sobre os vértices dos objetos renderizados.
+          </p>
+        </div>
+        
+        <div class="demo-container">
+          <iframe src="./animation2d/index.html" title="Demonstração Interativa de Transformações Lineares em WebGL"></iframe>
+        </div>
+      </div>
+
+      <p>
+        Cada transformação visualizada corresponde a operações matriciais executadas pela GPU, onde 
+        os vértices dos objetos são processados através de multiplicações com as matrizes de transformação 
+        correspondentes. Este processo demonstra a aplicação prática dos fundamentos teóricos da álgebra 
+        linear na criação de gráficos computacionais interativos.
+      </p>
+
+      <p>
+        A renderização em tempo real ilustra ainda a eficiência das operações matriciais em hardware 
+        dedicado, permitindo o processamento de milhares de vértices em cada quadro de animação, 
+        mantendo taxas de atualização superiores a 60 frames por segundo.
+      </p>
+    </article>
   </main>
+
+  <script>
+    // Scroll Progress Bar and TOC Progress
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progressBar').style.width = scrolled + '%';
+      document.getElementById('tocProgressFill').style.width = scrolled + '%';
+
+      // Update active section in TOC
+      updateActiveSection();
+    });
+
+    // Update active section based on scroll position
+    function updateActiveSection() {
+      const sections = document.querySelectorAll('article[id], h3[id]');
+      const tocItems = document.querySelectorAll('.toc-item');
+
+      let currentSection = '';
+      const scrollPosition = window.scrollY + 200; // Offset for better UX
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          currentSection = section.id;
+        }
+      });
+
+      tocItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === '#' + currentSection) {
+          item.classList.add('active');
+        }
+      });
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Close sidebar on mobile after clicking
+          if (window.innerWidth <= 1024) {
+            document.getElementById('tocSidebar').classList.remove('open');
+          }
+        }
+      });
+    });
+
+    // Toggle TOC Sidebar on mobile
+    document.getElementById('tocToggle').addEventListener('click', () => {
+      document.getElementById('tocSidebar').classList.toggle('open');
+    });
+
+    // Collapse/Expand TOC Sidebar on desktop
+    document.getElementById('tocCollapseBtn').addEventListener('click', () => {
+      const sidebar = document.getElementById('tocSidebar');
+      const collapseBtn = document.getElementById('tocCollapseBtn');
+      const body = document.body;
+
+      sidebar.classList.toggle('collapsed');
+      body.classList.toggle('sidebar-collapsed');
+      collapseBtn.classList.toggle('collapsed');
+
+      // Change arrow direction
+      if (sidebar.classList.contains('collapsed')) {
+        collapseBtn.textContent = '▶';
+        collapseBtn.title = 'Expandir menu';
+      } else {
+        collapseBtn.textContent = '◀';
+        collapseBtn.title = 'Recolher menu';
+      }
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      const sidebar = document.getElementById('tocSidebar');
+      const toggle = document.getElementById('tocToggle');
+
+      if (window.innerWidth <= 1024 &&
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+
+    // Initialize active section on load
+    updateActiveSection();
+  </script>
 </body>
 </html>
-
-<!--
-
-Aqui está um roteiro claro e progressivo para organizar seu conteúdo na página. Ele introduz o tema, explica os conceitos passo a passo,
-e indica onde mostrar suas animações WebGL:
-
----
-
-### 🧭 **Roteiro Didático – Computação Gráfica com Álgebra Linear**
-
----
-
-#### **1. Introdução**
-- **Objetivo da página:** mostrar como a álgebra linear é o alicerce da computação gráfica moderna.
-- **Contexto prático:** tudo o que vemos em animações 2D/3D, jogos e simulações parte de conceitos matemáticos simples como vetores e matrizes.
-- **Gancho inicial:** "Você já se perguntou como um objeto 3D gira, escala ou se move numa cena virtual? A resposta está na matemática!"
-
----
-
-#### **2. Vetores: A Base da Geometria Computacional**
-- **Conceito:** o que é um vetor (posição e direção).
-- **Aplicações:** representação de pontos, direções de movimento, forças, cores (RGB como vetores).
-- **Animação 1:** `vetores.html`  
-  Demonstre como vetores são usados para posicionar objetos.
-
----
-
-#### **3. Matrizes: Transformando o Espaço**
-- **Conceito:** introdução à multiplicação de vetores por matrizes.
-- **Transformações básicas:**
-  - **Translação**
-  - **Rotação**
-  - **Escala**
-- **Importância da ordem das transformações.**
-- **Animação 2:** `matrizes.html`  
-  Mostre como cada transformação afeta o objeto.
-
----
-
-#### **4. Composição de Transformações**
-- **Multiplicação de várias matrizes para animar objetos.**
-- **Stack de transformações no pipeline gráfico.**
-- **Homogeneização com coordenadas 3D (matriz 4x4).**
-
----
-
-#### **5. Do Modelo ao Mundo: Pipeline Gráfico**
-- **Explicação de como o objeto passa por coordenadas de modelo → mundo → câmera → tela.**
-- **Conceito de projeção (perspectiva e ortográfica).**
-
----
-
-#### **6. Interatividade e Animações em Tempo Real**
-- **WebGL:** como a álgebra linear entra em cena para gerar gráficos em tempo real.
-- **Conceitos de shaders e buffers, onde a matemática é processada na GPU.**
-- **Animação 3:** `interactive.html`  
-  Experiência onde o visitante interage com os vetores/matrizes.
-
----
-
-#### **7. Conclusão**
-- **Resumo da importância da álgebra linear.**
-- **Reforço visual: tudo que foi mostrado é resultado direto da aplicação matemática.**
-- **Convite para explorar mais:** simulações físicas, engines gráficas, computação 3D em geral.
-
----
-
-Se quiser, posso estruturar isso direto como conteúdo na página com seções novas, ou até adicionar botões, ícones, ou navegação lateral.
-Quer que eu monte isso já dentro do HTML?
-
--->
