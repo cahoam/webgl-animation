@@ -650,23 +650,79 @@
       </a>
       <a href="#secao2-1" class="toc-item toc-subsection" data-section="2.1">
         <span class="toc-item-number">2.1</span>
-        Estrutura do Espaço Bidimensional
+        Geometria
+      </a>
+      <a href="#secao2-2" class="toc-item toc-subsection" data-section="2.2">
+        <span class="toc-item-number">2.2</span>
+        Matrizes
+      </a>
+      <a href="#secao2-3" class="toc-item toc-subsection" data-section="2.3">
+        <span class="toc-item-number">2.3</span>
+        Transformação Linear
       </a>
       <a href="#secao3" class="toc-item" data-section="3">
         <span class="toc-item-number">3</span>
-        Transformações Lineares
+        Transformações Lineares Planas
       </a>
       <a href="#secao3-1" class="toc-item toc-subsection" data-section="3.1">
         <span class="toc-item-number">3.1</span>
-        Transformações Fundamentais
+        Reflexão
       </a>
       <a href="#secao3-2" class="toc-item toc-subsection" data-section="3.2">
         <span class="toc-item-number">3.2</span>
-        Matriz de Rotação no Plano
+        Dilatação e Contração
+      </a>
+      <a href="#secao3-3" class="toc-item toc-subsection" data-section="3.3">
+        <span class="toc-item-number">3.3</span>
+        Cisalhamento
+      </a>
+      <a href="#secao3-4" class="toc-item toc-subsection" data-section="3.4">
+        <span class="toc-item-number">3.4</span>
+        Rotação
       </a>
       <a href="#secao4" class="toc-item" data-section="4">
         <span class="toc-item-number">4</span>
-        Implementação e Resultados
+        Transformações Lineares no Espaço
+      </a>
+      <a href="#secao4-1" class="toc-item toc-subsection" data-section="4.1">
+        <span class="toc-item-number">4.1</span>
+        Reflexões em ℝ³
+      </a>
+      <a href="#secao4-2" class="toc-item toc-subsection" data-section="4.2">
+        <span class="toc-item-number">4.2</span>
+        Dilatação e Contração 3D
+      </a>
+      <a href="#secao4-3" class="toc-item toc-subsection" data-section="4.3">
+        <span class="toc-item-number">4.3</span>
+        Rotações 3D
+      </a>
+      <a href="#secao4-4" class="toc-item toc-subsection" data-section="4.4">
+        <span class="toc-item-number">4.4</span>
+        Exemplo: Tetraedro ABCD
+      </a>
+      <a href="#secao5" class="toc-item" data-section="5">
+        <span class="toc-item-number">5</span>
+        Transformações Aplicadas aos Polígonos
+      </a>
+      <a href="#secao5-1" class="toc-item toc-subsection" data-section="5.1">
+        <span class="toc-item-number">5.1</span>
+        Introdução às Transformações Geométricas
+      </a>
+      <a href="#secao5-2" class="toc-item toc-subsection" data-section="5.2">
+        <span class="toc-item-number">5.2</span>
+        Tipos de Transformações Geométricas
+      </a>
+      <a href="#secao5-3" class="toc-item toc-subsection" data-section="5.3">
+        <span class="toc-item-number">5.3</span>
+        Transformações com Ponto Fixo
+      </a>
+      <a href="#secao5-4" class="toc-item toc-subsection" data-section="5.4">
+        <span class="toc-item-number">5.4</span>
+        Composição de Transformações
+      </a>
+      <a href="#secao6" class="toc-item" data-section="6">
+        <span class="toc-item-number">6</span>
+        Implementação WebGL
       </a>
     </nav>
   </aside>
@@ -691,147 +747,340 @@
     <article id="secao1">
       <span class="section-label">1. Introdução</span>
       <h2>Fundamentos Matemáticos da Computação Gráfica</h2>
-      
+
       <p>
-        A computação gráfica moderna fundamenta-se na aplicação sistemática de conceitos da álgebra linear 
-        para representação e manipulação de objetos geométricos no espaço bidimensional e tridimensional. 
-        Esta intersecção entre matemática pura e ciência aplicada possibilita a criação de ambientes virtuais 
+        A computação gráfica moderna fundamenta-se na aplicação sistemática de conceitos da álgebra linear
+        para representação e manipulação de objetos geométricos no espaço bidimensional e tridimensional.
+        Esta intersecção entre matemática pura e ciência aplicada possibilita a criação de ambientes virtuais
         complexos, desde jogos eletrônicos até simulações científicas de alta fidelidade.
       </p>
 
+      <h3 id="secao1-1">1.1 O Contexto Prático: Onde Encontramos Computação Gráfica</h3>
+
       <p>
-        Conforme estabelecido por <strong>Gomes e Velho (2015)</strong>, a computação gráfica pode ser 
-        compreendida como um conjunto de métodos e técnicas para transformação de dados em imagens através 
-        de dispositivos gráficos. Neste contexto, a álgebra linear fornece o arcabouço matemático essencial 
-        para operações de transformação, projeção e renderização.
+        A computação gráfica está presente em praticamente todos os aspectos da tecnologia moderna.
+        <strong>Engines de jogos</strong> como Unity e Unreal Engine utilizam matrizes de transformação
+        para posicionar, rotacionar e dimensionar milhares de objetos simultaneamente em mundos virtuais
+        imensos. Até mesmo <strong>interfaces de usuário</strong> modernas, com suas transições suaves 
+        e animações fluidas, dependem de transformações geométricas calculadas em tempo real pela GPU.
       </p>
 
       <p>
-        Cada pixel visualizado em uma tela, cada rotação de câmera em um jogo, cada transformação de um 
-        personagem animado — todas estas operações são fundamentadas em cálculos com vetores e matrizes. 
-        A álgebra linear fornece a linguagem matemática precisa que permite aos computadores manipularem 
-        objetos geométricos de forma eficiente e determinística.
+        Conforme estabelecido por <strong>Gomes e Velho (2015)</strong>, a computação gráfica pode ser
+        compreendida como um conjunto de métodos e técnicas para transformação de dados em imagens através
+        de dispositivos gráficos. Neste contexto, a álgebra linear fornece o arcabouço matemático essencial
+        para operações de transformação, projeção e renderização.
+      </p>
+
+      <h3 id="secao1-2">1.2 A Importância do Plano Cartesiano</h3>
+
+      <p>
+        No centro de toda a computação gráfica está um conceito aparentemente simples, mas profundamente
+        poderoso: o <strong>sistema de coordenadas cartesianas</strong>. Cada objeto que você vê em uma tela
+        — seja um triângulo simples ou um modelo 3D complexo com milhões de polígonos — é definido por
+        pontos no espaço, representados por coordenadas numéricas. Um triângulo em 2D, por exemplo, é
+        simplesmente três pontos com coordenadas (x, y), armazenados na memória do computador como uma
+        sequência de números.
+      </p>
+
+      <div class="math-block">
+        $$\text{Triângulo ABC} = \begin{bmatrix}
+        x_A & y_A \\
+        x_B & y_B \\
+        x_C & y_C
+        \end{bmatrix} = \begin{bmatrix}
+        1 & 1 \\
+        -1 & 2 \\
+        -1 & 0
+        \end{bmatrix}$$
+      </div>
+
+      <p>
+        Estes dados geométricos não ficam estáticos, eles são constantemente manipulados através de
+        operações matemáticas. Quando você rotaciona um objeto em um jogo, o computador não está redesenhando
+        pixel por pixel; ele está multiplicando as coordenadas de cada vértice por uma <strong>matriz de rotação</strong>.
+        Quando você faz zoom, uma <strong>matriz de escala</strong> é aplicada. Quando move a câmera,
+        <strong>matrizes de translação</strong> transformam todas as coordenadas do mundo virtual.
+        Tudo isso acontece em frações de segundo, permitindo interações fluidas e responsivas.
       </p>
 
       <div class="theorem-box">
         <p>
-          <strong>WebGL (Web Graphics Library)</strong> é uma API JavaScript para renderização de gráficos 
-          2D e 3D interativos em navegadores web sem uso de plugins. Baseada no OpenGL ES 2.0, permite 
-          acesso direto à GPU para processamento paralelo de operações matriciais, possibilitando renderização 
-          em tempo real de cenas complexas com milhões de cálculos por segundo.
+          <strong>WebGL (Web Graphics Library)</strong> é uma API JavaScript para renderização de gráficos
+          2D e 3D interativos em navegadores web sem uso de plugins. Baseada no OpenGL ES 2.0, permite
+          acesso direto à GPU (Graphics Processing Unit) para processamento paralelo de operações matriciais,
+          possibilitando renderização em tempo real de cenas complexas com milhões de cálculos por segundo.
+          Nesta página, utilizaremos WebGL para demonstrar cada conceito matemático.
         </p>
       </div>
     </article>
 
-    <!-- Sistema de Coordenadas -->
+    <!-- Conceitos Preliminares -->
     <article id="secao2">
       <span class="section-label">2. Conceitos Preliminares</span>
-      <h2>Sistema de Coordenadas Cartesianas</h2>
+      <h2>Fundamentos Matemáticos</h2>
 
       <p>
-        O sistema de coordenadas cartesianas, desenvolvido por René Descartes no século XVII e formalizado
-        em sua obra <em>La Géométrie</em> (1637), representa um marco fundamental na história da matemática
-        ao estabelecer uma correspondência biunívoca entre geometria e álgebra. Este sistema possibilita a
-        descrição analítica de objetos geométricos através de coordenadas numéricas.
+        A computação gráfica fundamenta-se em conceitos da geometria analítica, álgebra linear e teoria
+        de transformações. Esta seção estabelece as bases matemáticas necessárias para compreender como
+        objetos geométricos são representados e manipulados computacionalmente.
       </p>
 
-      <h3 id="secao2-1">2.1 Estrutura do Espaço Bidimensional</h3>
+      <h3 id="secao2-1">2.1 Geometria</h3>
 
       <p>
-        No espaço euclidiano bidimensional, denotado por ℝ², cada ponto P é univocamente determinado por 
-        um par ordenado de coordenadas (x, y), onde x ∈ ℝ representa a abscissa e y ∈ ℝ a ordenada. 
-        A origem do sistema, denotada por O = (0, 0), corresponde à interseção dos eixos coordenados 
-        ortogonais.
+        O sistema de coordenadas cartesianas, desenvolvido por René Descartes em <em>La Géométrie</em> (1637),
+        estabelece correspondência entre geometria e álgebra. Na <strong>geometria sintética</strong>, propriedades
+        são estudadas sem coordenadas. Na <strong>geometria analítica</strong>, pontos, retas e figuras são
+        expressos numericamente através de coordenadas.
+      </p>
+
+      <p>
+        No espaço bidimensional <strong>ℝ²</strong>, cada ponto P é determinado por um par ordenado (x, y),
+        onde x representa a abscissa e y a ordenada. A origem O = (0, 0) corresponde à interseção dos eixos
+        perpendiculares x e y. Os eixos dividem o plano em quatro quadrantes.
       </p>
 
       <div class="figure-container">
         <div class="figure-wrapper">
-          <img src="./assets/images/plano.png" alt="Sistema de Coordenadas Cartesianas" width="500">
+          <img src="./assets/images/plano.png" alt="Sistema de Coordenadas Cartesianas ℝ²" width="500">
         </div>
         <p class="figure-caption">
-          <strong>Figura 1.</strong> Representação do plano cartesiano ℝ² com eixos ortogonais e pontos 
-          identificados por coordenadas (x, y).
+          <strong>Figura 2.1.</strong> Sistema de coordenadas cartesianas em ℝ² com eixos ortogonais.
         </p>
       </div>
 
       <p>
-        Este sistema permite não apenas a localização de pontos, mas também a execução de operações 
-        geométricas fundamentais de forma algébrica. A distância euclidiana entre dois pontos 
-        P₁ = (x₁, y₁) e P₂ = (x₂, y₂), por exemplo, é calculada pela métrica:
+        No espaço tridimensional <strong>ℝ³</strong>, pontos são representados por triplas ordenadas (x, y, z),
+        onde z indica profundidade. Os planos coordenados xOy, xOz e yOz dividem o espaço
+        em oito octantes.
+      </p>
+
+      <p>
+        Na computação gráfica, vértices de polígonos são pontos com coordenadas. Um triângulo com vértices
+        A(1,1), B(-1,2) e C(-1,0) é armazenado como array de números: [1, 1, -1, 2, -1, 0]. Para renderização
+        no WebGL, estes valores são convertidos em <strong>Float32Array</strong> e enviados à GPU.
+      </p>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 1: vetor.html -->
+      <div class="demo-section">
+        <div class="demo-header">
+          <h3>Demonstração 2.1: Sistema de Coordenadas Cartesianas</h3>
+          <p class="demo-description">
+            Arraste os pontos para visualizar como coordenadas (x, y) definem posições no plano.
+            Observe a relação entre representação numérica e posição geométrica.
+          </p>
+        </div>
+        <div class="demo-container">
+          <!-- TODO: DEMO 1 - vetor.html mostrando plano cartesiano interativo -->
+          <iframe src="./vetor.html" title="Demo: Plano Cartesiano"></iframe>
+        </div>
+      </div>
+
+      <h3 id="secao2-2">2.2 Matrizes</h3>
+
+      <p>
+        Uma <strong>matriz</strong> é uma tabela retangular de números organizados em linhas e colunas.
+        Uma matriz m×n possui m linhas e n colunas. O elemento na linha i e coluna j é denotado por aᵢⱼ.
+        Matrizes são fundamentais na computação gráfica pois codificam transformações geométricas.
+      </p>
+
+      <p>
+        A matriz de vértices de um triângulo ABC é representada como uma matriz 3×2:
       </p>
 
       <div class="math-block">
-        $$d(P_1, P_2) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
+        $$\text{Triângulo ABC} = \begin{bmatrix}
+        x_A & y_A \\
+        x_B & y_B \\
+        x_C & y_C
+        \end{bmatrix} = \begin{bmatrix}
+        1 & 1 \\
+        -1 & 2 \\
+        -1 & 0
+        \end{bmatrix}$$
       </div>
+
+      <p>
+        <strong>Operações com matrizes</strong> incluem adição (elemento a elemento), multiplicação por escalar
+        (multiplicar todos os elementos) e multiplicação matricial. A multiplicação de matrizes A (m×n) e B (n×p)
+        resulta em C (m×p), onde cada elemento cᵢⱼ = Σₖ aᵢₖ·bₖⱼ. Esta operação <strong>não é comutativa</strong>:
+        AB ≠ BA em geral.
+      </p>
+
+      <div class="math-block">
+        $$\text{Multiplicação: } \begin{bmatrix} a & b \\ c & d \end{bmatrix}
+        \begin{bmatrix} x \\ y \end{bmatrix} =
+        \begin{bmatrix} ax + by \\ cx + dy \end{bmatrix}$$
+      </div>
+
+      <p>
+        A <strong>matriz identidade</strong> I possui 1 na diagonal principal e 0 nos demais elementos.
+        Multiplicar qualquer matriz por I resulta na própria matriz: AI = IA = A. Matrizes de transformação
+        2×2 são usadas para transformações lineares em ℝ², enquanto matrizes 3×3 representam transformações
+        em ℝ² usando coordenadas homogêneas.
+      </p>
 
       <div class="theorem-box">
         <p>
-          <strong>Extensão para ℝ³:</strong> Em computação gráfica tridimensional, cada vértice de um 
-          objeto é representado por coordenadas (x, y, z) no espaço ℝ³, onde z representa a profundidade. 
-          Esta extensão mantém as propriedades fundamentais do sistema cartesiano, permitindo operações 
-          análogas em dimensão superior.
+          <strong>Eficiência Computacional:</strong> A GPU processa multiplicações matriciais em paralelo,
+          aplicando a mesma transformação a milhares de vértices simultaneamente. Esta paralelização é
+          o que permite renderização em tempo real de cenas complexas a 60 frames por segundo.
+        </p>
+      </div>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 2: Interface para matriz 2×2 -->
+      <!-- Usuário insere valores da matriz e vê transformação aplicada a um polígono -->
+
+      <h3 id="secao2-3">2.3 Transformação Linear</h3>
+
+      <p>
+        Um <strong>espaço vetorial</strong> V é um conjunto com operações de adição e multiplicação por escalar
+        que satisfazem axiomas de fechamento, associatividade, comutatividade, existência de elemento neutro
+        e inverso.
+      </p>
+
+      <p>
+        Um <strong>vetor</strong> é um elemento de um espaço vetorial. Geometricamente, possui magnitude e direção.
+        Em ℝ², vetores são representados como (x, y) ou como vetores coluna. Operações vetoriais incluem:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        \text{Adição: } & \mathbf{u} + \mathbf{v} = (u_x + v_x,\, u_y + v_y) \\
+        \text{Mult. escalar: } & \alpha\mathbf{u} = (\alpha u_x,\, \alpha u_y) \\
+        \text{Produto escalar: } & \mathbf{u} \cdot \mathbf{v} = u_x v_x + u_y v_y \\
+        \text{Norma: } & |\mathbf{u}| = \sqrt{u_x^2 + u_y^2}
+        \end{aligned}$$
+      </div>
+
+      <p>
+        Uma <strong>combinação linear</strong> de vetores v₁, v₂, ..., vₙ é expressa como α₁v₁ + α₂v₂ + ... + αₙvₙ,
+        onde αᵢ são escalares. Vetores são <strong>linearmente independentes</strong> se nenhum pode ser expresso
+        como combinação linear dos outros. Uma <strong>base</strong> de um espaço vetorial é um conjunto linearmente
+        independente que gera todo o espaço. A <strong>dimensão</strong> é o número de vetores em uma base.
+      </p>
+
+      <p>
+        Uma <strong>transformação linear</strong> T: V → W preserva operações vetoriais:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        T(\mathbf{u} + \mathbf{v}) &= T(\mathbf{u}) + T(\mathbf{v}) \\
+        T(\alpha\mathbf{v}) &= \alpha T(\mathbf{v})
+        \end{aligned}$$
+      </div>
+
+      <p>
+        Propriedades fundamentais: T(0) = 0 (a origem é sempre mapeada para a origem) e transformações preservam
+        retas (retas permanecem retas após transformação). A <strong>imagem</strong> Im(T) é o conjunto de todos
+        os vetores que podem ser obtidos aplicando T.
+      </p>
+
+      <p>
+        Toda transformação linear T: ℝⁿ → ℝᵐ pode ser representada por uma <strong>matriz m×n</strong>, onde
+        as colunas da matriz são as imagens dos vetores da base. Aplicar a transformação é equivalente a
+        multiplicar a matriz pelo vetor: T(v) = Av. Esta representação matricial permite aplicação eficiente
+        de transformações a múltiplos vértices simultaneamente.
+      </p>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 3: Operações vetoriais -->
+      <!-- Mostrar adição de vetores, multiplicação por escalar, dependência linear -->
+
+      <div class="theorem-box">
+        <p>
+          <strong>Aplicação em CG:</strong> Cada vértice de um polígono é um vetor posição. Transformações
+          geométricas (rotação, escala, reflexão) são transformações lineares representadas por matrizes.
+          Vetores normais (perpendiculares a superfícies) são essenciais para cálculos de iluminação.
         </p>
       </div>
     </article>
 
     <div class="section-divider"></div>
 
-    <!-- Transformações -->
+    <!-- Transformações Lineares Planas -->
     <article id="secao3">
-      <span class="section-label">3. Transformações Lineares</span>
-      <h2>Matrizes e Transformações Geométricas</h2>
+      <span class="section-label">3. Transformações Lineares Planas (ℝ²)</span>
+      <h2>Operações Geométricas no Plano</h2>
 
       <p>
-        As matrizes constituem estruturas algébricas fundamentais para a representação e composição de
-        transformações geométricas. Conforme <strong>Steinbruch (2009)</strong>, uma matriz de ordem
-        m × n é um arranjo retangular de elementos dispostos em m linhas e n colunas, permitindo a
-        codificação compacta de sistemas de equações lineares e transformações do espaço.
+        Uma transformação linear T: ℝ² → ℝ² preserva operações de adição vetorial e multiplicação
+        por escalar. Estas transformações são fundamentais na computação gráfica, pois permitem
+        manipular formas geométricas de maneira sistemática através de operações matriciais.
       </p>
-
-      <h3 id="secao3-1">3.1 Transformações Lineares Fundamentais</h3>
 
       <p>
-        Uma transformação linear T: ℝⁿ → ℝⁿ satisfaz as propriedades de aditividade e homogeneidade, 
-        podendo ser representada por uma matriz canônica [T] que codifica completamente seu comportamento. 
-        Na computação gráfica, quatro classes de transformações são particularmente relevantes:
+        Toda transformação linear pode ser representada por uma matriz 2×2, permitindo aplicação
+        eficiente a múltiplos vértices simultaneamente. Propriedades importantes: transformações
+        lineares sempre mapeiam a origem para a origem T(0,0) = (0,0), preservam retas e preservam paralelismo.
       </p>
 
-      <div class="transformation-grid">
-        <div class="transform-card">
-          <h4>Rotação</h4>
-          <p>
-            Transformação que gira vetores em torno de um ponto fixo (no plano) ou eixo (no espaço) 
-            por um ângulo θ, preservando distâncias e ângulos.
-          </p>
-        </div>
-        <div class="transform-card">
-          <h4>Escala</h4>
-          <p>
-            Transformação que altera as dimensões de objetos por fatores multiplicativos, podendo ser 
-            uniforme (mesma escala em todas as direções) ou não-uniforme.
-          </p>
-        </div>
-        <div class="transform-card">
-          <h4>Translação</h4>
-          <p>
-            Transformação afim que desloca objetos no espaço por um vetor de deslocamento constante, 
-            sem alterar orientação ou dimensões.
-          </p>
-        </div>
-        <div class="transform-card">
-          <h4>Reflexão</h4>
-          <p>
-            Transformação que espelha objetos em relação a um eixo (2D) ou plano (3D), invertendo 
-            uma ou mais coordenadas.
-          </p>
-        </div>
+      <h3 id="secao3-1">3.1 Reflexão</h3>
+
+      <p>
+        Reflexão espelha pontos em relação a um eixo, invertendo uma coordenada. A matriz de reflexão
+        possui determinante -1, indicando inversão de orientação.
+      </p>
+
+      <div class="math-block">
+        $$\text{Reflexão no eixo } x: \quad R_x = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$$
+        <br><br>
+        $$\text{Reflexão no eixo } y: \quad R_y = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$$
+        <br><br>
+        $$\text{Reflexão na origem: } \quad R_O = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}$$
       </div>
 
-      <h3 id="secao3-2">3.2 Matriz de Rotação no Plano</h3>
+      <p>
+        Aplicando reflexão no eixo x ao ponto (2, 3): R<sub>x</sub>(2, 3) = (2, -3).
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Visualização de triângulo sendo refletido nos eixos -->
+
+      <h3 id="secao3-2">3.2 Dilatação e Contração (Escala)</h3>
 
       <p>
-        A transformação de rotação por um ângulo θ no sentido anti-horário em torno da origem no 
-        plano ℝ² é expressa pela matriz canônica:
+        Escala altera dimensões de objetos por fatores multiplicativos. Quando α = β, a escala é
+        <strong>uniforme</strong> (mantém proporções). Quando α ≠ β, a escala é <strong>não-uniforme</strong>.
+      </p>
+
+      <div class="math-block">
+        $$S(\alpha, \beta) = \begin{bmatrix} \alpha & 0 \\ 0 & \beta \end{bmatrix}$$
+      </div>
+
+      <p>
+        Se α > 1 ou β > 1, ocorre <strong>dilatação</strong> (aumento). Se 0 < α < 1 ou 0 < β < 1,
+        ocorre <strong>contração</strong> (redução). Exemplo: S(2, 0.5) aplica ampliação horizontal
+        de 2x e redução vertical pela metade.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Quadrado sendo escalado com diferentes valores de α e β -->
+
+      <h3 id="secao3-3">3.3 Cisalhamento</h3>
+
+      <p>
+        Cisalhamento desloca coordenadas proporcionalmente a outra coordenada, distorcendo a forma
+        sem alterar área. Converte retângulos em paralelogramos.
+      </p>
+
+      <div class="math-block">
+        $$\text{Cisalhamento em } x: \quad Sh_x(k) = \begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix}$$
+        <br><br>
+        $$\text{Cisalhamento em } y: \quad Sh_y(k) = \begin{bmatrix} 1 & 0 \\ k & 1 \end{bmatrix}$$
+      </div>
+
+      <p>
+        Para Sh<sub>x</sub>(k), um ponto (x, y) é mapeado para (x + ky, y). Quanto maior k, maior a distorção.
+        Aplicação comum: criar efeitos de perspectiva e inclinação em fontes tipográficas.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Quadrado se transformando em paralelogramo com cisalhamento -->
+
+      <h3 id="secao3-4">3.4 Rotação</h3>
+
+      <p>
+        Rotação gira vetores por um ângulo θ (em radianos) no sentido <strong>anti-horário</strong>
+        em torno da origem. É uma transformação que preserva distâncias e ângulos (isometria).
       </p>
 
       <div class="math-block">
@@ -839,60 +1088,730 @@
       </div>
 
       <p>
-        A multiplicação desta matriz por um vetor coluna [x, y]ᵀ produz as novas coordenadas do ponto 
-        rotacionado, demonstrando a elegância da representação matricial para transformações geométricas.
+        Rotações comuns em graus:
+      </p>
+
+      <div class="math-block">
+        $$R(90°) = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}, \quad
+        R(180°) = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}, \quad
+        R(270°) = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$$
+      </div>
+
+      <p>
+        A matriz de rotação possui determinante 1 e é ortogonal: R<sup>T</sup> = R<sup>-1</sup>.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Polígono girando continuamente ou em ângulos específicos -->
+
+      <div class="theorem-box">
+        <p>
+          <strong>Composição de Transformações:</strong> Múltiplas transformações lineares podem
+          ser combinadas multiplicando suas matrizes. Para aplicar transformação T₁ seguida de T₂,
+          calcula-se M = T₂ · T₁ (ordem reversa). A ordem importa: T₁ · T₂ ≠ T₂ · T₁ em geral.
+          Exemplo: rotacionar 45° e depois escalar 2x resulta em matriz M = S(2,2) · R(45°).
+        </p>
+      </div>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 4: animation2d/ ou nova implementação -->
+      <!-- Interface permite selecionar tipo de transformação (reflexão, escala, cisalhamento, rotação) -->
+      <!-- Controles: botões para reflexão, sliders para escala/cisalhamento/rotação -->
+      <!-- Visualizar transformação em tempo real com matriz exibida -->
+    </article>
+
+    <div class="section-divider"></div>
+
+    <!-- Transformações Lineares no Espaço -->
+    <article id="secao4">
+      <span class="section-label">4. Transformações Lineares no Espaço (ℝ³)</span>
+      <h2>Operações Geométricas no Espaço Tridimensional</h2>
+
+      <p>
+        Transformações lineares em ℝ³ estendem os conceitos do plano para o espaço tridimensional.
+        Uma transformação linear T: ℝ³ → ℝ³ é representada por uma matriz 3×3, aplicando as mesmas
+        operações de reflexão, escala e rotação a poliedros (sólidos 3D).
+      </p>
+
+      <h3 id="secao4-1">4.1 Reflexões em ℝ³</h3>
+
+      <p>
+        Reflexão em 3D espelha pontos em relação a um plano coordenado, invertendo uma das coordenadas:
+      </p>
+
+      <div class="math-block">
+        $$\text{Reflexão no plano } xOy: \quad R_{xOy} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & -1 \end{bmatrix}$$
+        <br><br>
+        $$\text{Reflexão no plano } xOz: \quad R_{xOz} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+        <br><br>
+        $$\text{Reflexão no plano } yOz: \quad R_{yOz} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+      </div>
+
+      <p>
+        Aplicação: espelhar modelo 3D, criar simetrias em objetos tridimensionais.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Visualização de cubo sendo refletido nos planos coordenados -->
+
+      <h3 id="secao4-2">4.2 Dilatação e Contração 3D</h3>
+
+      <p>
+        Escala tridimensional altera dimensões independentemente em cada eixo:
+      </p>
+
+      <div class="math-block">
+        $$\text{Escala uniforme: } \quad S(\alpha) = \begin{bmatrix} \alpha & 0 & 0 \\ 0 & \alpha & 0 \\ 0 & 0 & \alpha \end{bmatrix}$$
+        <br><br>
+        $$\text{Escala não-uniforme: } \quad S(\alpha_x, \alpha_y, \alpha_z) = \begin{bmatrix} \alpha_x & 0 & 0 \\ 0 & \alpha_y & 0 \\ 0 & 0 & \alpha_z \end{bmatrix}$$
+      </div>
+
+      <p>
+        Exemplo: S(2, 1, 0.5) duplica dimensão em x, mantém y, e reduz z pela metade.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Cubo sendo escalado com diferentes fatores em cada eixo -->
+
+      <h3 id="secao4-3">4.3 Rotações 3D</h3>
+
+      <p>
+        Em 3D, rotações ocorrem em torno de um dos três eixos coordenados. O ângulo θ é medido em radianos,
+        sentido anti-horário quando olhando do eixo positivo em direção à origem:
+      </p>
+
+      <div class="math-block">
+        $$\text{Rotação em torno do eixo } x: \quad R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}$$
+      </div>
+
+      <div class="math-block">
+        $$\text{Rotação em torno do eixo } y: \quad R_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}$$
+      </div>
+
+      <div class="math-block">
+        $$\text{Rotação em torno do eixo } z: \quad R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+      </div>
+
+      <!-- TODO: ADICIONAR IMAGEM - Poliedro rotacionando em torno dos três eixos -->
+
+      <h3 id="secao4-4">4.4 Exemplo: Tetraedro ABCD</h3>
+
+      <p>
+        Considere um tetraedro com vértices A(1,0,0), B(0,1,0), C(0,0,1) e D(0,0,0).
+        Aplicando rotação de 90° no eixo y:
+      </p>
+
+      <div class="math-block">
+        $$R_y(90°) = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{bmatrix}$$
+      </div>
+
+      <p>
+        O vértice A(1,0,0) é transformado para A'(0,0,-1). Os demais vértices são calculados similarmente.
       </p>
 
       <div class="theorem-box">
         <p>
-          <strong>Eficiência Computacional:</strong> As GPUs (Graphics Processing Units) são arquiteturas 
-          especializadas em operações matriciais paralelas, executando milhares de multiplicações 
-          matriz-vetor simultaneamente. Esta característica torna a representação matricial não apenas 
-          matematicamente elegante, mas também computacionalmente ótima para processamento gráfico em 
-          tempo real.
+          <strong>Aplicações em Gráficos 3D:</strong> Rotações 3D são essenciais para controles de câmera
+          (pitch, yaw, roll), orientação de objetos, e animações. Engines gráficas como Unity e Unreal
+          utilizam quaternions além de matrizes para evitar gimbal lock e interpolar rotações suavemente.
         </p>
+      </div>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 5: Visualização 3D com Three.js ou WebGL -->
+      <!-- Poliedro 3D (tetraedro, cubo, octaedro) com controles de câmera -->
+      <!-- Selecionar transformação: reflexão (plano), escala (x,y,z), rotação (eixo e ângulo) -->
+      <!-- Visualizar eixos coordenados e matriz 3×3 aplicada -->
+    </article>
+
+    <div class="section-divider"></div>
+
+    <!-- Transformações Aplicadas aos Polígonos -->
+    <article id="secao5">
+      <span class="section-label">5. Transformações Aplicadas aos Polígonos (ℝ²)</span>
+      <h2>Transformações Geométricas e Composição</h2>
+
+      <p>
+        As transformações lineares estudadas na Seção 3 preservam sempre a origem: T(0,0) = (0,0).
+        Contudo, na prática da computação gráfica, necessita-se posicionar objetos livremente no plano,
+        rotacioná-los em torno de pontos arbitrários e compor múltiplas operações. Estas capacidades
+        são fornecidas pelas transformações geométricas, que incluem translações
+        e permitem especificação de pontos fixos.
+      </p>
+
+      <h3 id="secao5-1">5.1 Introdução às Transformações Geométricas</h3>
+
+      <p>
+        Uma transformação afim é da forma T(v) = Av + b, onde A é uma matriz e b um vetor de translação.
+        Diferentemente de transformações lineares, transformações afins <strong>não preservam a origem</strong>,
+        permitindo deslocamentos.
+      </p>
+
+      <h3 id="secao5-2">5.2 Tipos de Transformações Geométricas em ℝ²</h3>
+
+      <h4>5.2.1 Translação</h4>
+
+      <p>
+        Translação desloca todos os vértices de um polígono por um vetor (α, β). A operação é definida por:
+      </p>
+
+      <div class="math-block">
+        $$(x', y') = (x + \alpha, y + \beta)$$
+      </div>
+
+      <p>
+        Esta operação <strong>não é linear</strong>, pois T(0,0) = (α, β) ≠ (0,0).
+      </p>
+
+      <p>
+        <strong>Exemplo 5.1:</strong> Considere um triângulo ABC com vértices A(1, 1), B(3, 1) e C(2, 3).
+        Aplicando uma translação T(2, -1), obtemos:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A'(x', y') &= (1 + 2,\, 1 + (-1)) = (3, 0) \\
+        B'(x', y') &= (3 + 2,\, 1 + (-1)) = (5, 0) \\
+        C'(x', y') &= (2 + 2,\, 3 + (-1)) = (4, 2)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O triângulo foi deslocado 2 unidades para a direita e 1 unidade para baixo. A forma e
+        orientação do triângulo permanecem inalteradas, apenas sua posição no plano muda.
+      </p>
+
+      <p>
+        <strong>Aplicações:</strong> Posicionamento de objetos em cenas, animações de movimento,
+        deslocamento de câmera.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Triângulo se movendo no plano com vetor de translação destacado -->
+
+      <h4>5.2.2 Escala (Ampliação/Redução)</h4>
+
+      <p>
+        Escala altera as dimensões de um polígono por fatores s<sub>x</sub> e s<sub>y</sub>. Quando
+        s<sub>x</sub> = s<sub>y</sub>, a escala é <strong>uniforme</strong> e mantém proporções. Quando
+        s<sub>x</sub> ≠ s<sub>y</sub>, a escala é <strong>não-uniforme</strong>, distorcendo o objeto.
+      </p>
+
+      <div class="math-block">
+        $$S(s_x, s_y) = \begin{bmatrix} s_x & 0 \\ 0 & s_y \end{bmatrix}$$
+      </div>
+
+      <p>
+        Valores s<sub>x</sub> > 1 ou s<sub>y</sub> > 1 causam ampliação. Valores 0 < s < 1 causam redução.
+      </p>
+
+      <p>
+        <strong>Exemplo 5.2:</strong> Aplicando escala S(2, 0.5) ao quadrado com vértices
+        A(1, 1), B(3, 1), C(3, 3) e D(1, 3):
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A' &= \begin{bmatrix} 2 & 0 \\ 0 & 0.5 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} 2 \cdot 1 \\ 0.5 \cdot 1 \end{bmatrix} = \begin{bmatrix} 2 \\ 0.5 \end{bmatrix} \\
+        B' &= \begin{bmatrix} 2 & 0 \\ 0 & 0.5 \end{bmatrix} \begin{bmatrix} 3 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} 6 \\ 0.5 \end{bmatrix} \\
+        C' &= \begin{bmatrix} 2 & 0 \\ 0 & 0.5 \end{bmatrix} \begin{bmatrix} 3 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} 6 \\ 1.5 \end{bmatrix} \\
+        D' &= \begin{bmatrix} 2 & 0 \\ 0 & 0.5 \end{bmatrix} \begin{bmatrix} 1 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} 2 \\ 1.5 \end{bmatrix}
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O quadrado original foi transformado em um retângulo com o dobro da largura (ampliado em x)
+        e metade da altura (reduzido em y). Esta é uma escala não-uniforme.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Quadrado sendo redimensionado com diferentes fatores em x e y -->
+
+      <h4>5.2.3 Rotação</h4>
+
+      <p>
+        Rotação gira um polígono por ângulo θ (radianos) em torno da origem, no sentido anti-horário.
+        A matriz de rotação é:
+      </p>
+
+      <div class="math-block">
+        $$R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$$
+      </div>
+
+      <p>
+        Para ângulos comuns: R(45°) ≈ [0.707, -0.707; 0.707, 0.707], R(90°) = [0, -1; 1, 0].
+      </p>
+
+      <p>
+        <strong>Exemplo 5.3:</strong> Rotacionando o ponto P(2, 0) por 90° (π/2 radianos) em torno da origem:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        R(90°) &= \begin{bmatrix} \cos(90°) & -\sin(90°) \\ \sin(90°) & \cos(90°) \end{bmatrix}
+        = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} \\
+        P' &= \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} \begin{bmatrix} 2 \\ 0 \end{bmatrix}
+        = \begin{bmatrix} 0 \cdot 2 + (-1) \cdot 0 \\ 1 \cdot 2 + 0 \cdot 0 \end{bmatrix}
+        = \begin{bmatrix} 0 \\ 2 \end{bmatrix}
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O ponto P(2, 0), localizado no eixo x positivo, foi rotacionado 90° para a posição P'(0, 2)
+        no eixo y positivo, como esperado para uma rotação anti-horária.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Triângulo rotacionando 45° em torno da origem -->
+
+      <h3 id="secao5-3">5.3 Transformações com Ponto Fixo</h3>
+
+      <p>
+        Frequentemente necessita-se aplicar rotação ou escala mantendo um ponto específico P fixo,
+        ao invés de transformar em torno da origem. Isto é essencial para manipulação intuitiva
+        de objetos gráficos.
+      </p>
+
+      <h4>5.3.1 Escala com Ponto Fixo</h4>
+
+      <p>
+        Para escalar um polígono mantendo ponto P(p<sub>x</sub>, p<sub>y</sub>) fixo, utiliza-se
+        o seguinte algoritmo:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        &\text{1. Transladar P para a origem:} \quad T(-p_x, -p_y) \\
+        &\text{2. Aplicar escala:} \quad S(s_x, s_y) \\
+        &\text{3. Transladar de volta:} \quad T(p_x, p_y)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        A matriz composta é M = T(p<sub>x</sub>, p<sub>y</sub>) · S(s<sub>x</sub>, s<sub>y</sub>) · T(-p<sub>x</sub>, -p<sub>y</sub>).
+        Esta composição garante que o ponto P permanece inalterado após a transformação.
+      </p>
+
+      <p>
+        <strong>Exemplo 5.4:</strong> Escalar o triângulo com vértices A(1, 1), B(3, 1) e C(2, 3)
+        por fator uniforme 2 mantendo o ponto A(1, 1) fixo.
+      </p>
+
+      <p>
+        <strong>Passo 1:</strong> Transladar A para a origem: T(-1, -1)
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A_1 &= (1 - 1,\, 1 - 1) = (0, 0) \\
+        B_1 &= (3 - 1,\, 1 - 1) = (2, 0) \\
+        C_1 &= (2 - 1,\, 3 - 1) = (1, 2)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Passo 2:</strong> Aplicar escala S(2, 2):
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A_2 &= (0 \cdot 2,\, 0 \cdot 2) = (0, 0) \\
+        B_2 &= (2 \cdot 2,\, 0 \cdot 2) = (4, 0) \\
+        C_2 &= (1 \cdot 2,\, 2 \cdot 2) = (2, 4)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Passo 3:</strong> Transladar de volta: T(1, 1)
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A' &= (0 + 1,\, 0 + 1) = (1, 1) \\
+        B' &= (4 + 1,\, 0 + 1) = (5, 1) \\
+        C' &= (2 + 1,\, 4 + 1) = (3, 5)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O vértice A permaneceu em (1, 1) como ponto fixo, enquanto os vértices B e C tiveram
+        suas distâncias relativas a A duplicadas.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Triângulo sendo escalado com vértice A fixo e marcado -->
+
+      <h4>5.3.2 Rotação com Ponto Fixo</h4>
+
+      <p>
+        Para rotacionar um polígono θ radianos em torno de ponto P (não a origem), aplica-se o mesmo
+        princípio de translação-transformação-translação:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        &\text{1. Transladar P à origem:} \quad T(-p_x, -p_y) \\
+        &\text{2. Aplicar rotação:} \quad R(\theta) \\
+        &\text{3. Transladar de volta:} \quad T(p_x, p_y)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Exemplo 5.5:</strong> Rotacionar o triângulo com vértices A(1, 1), B(3, 1) e C(2, 3)
+        por 90° em torno do ponto fixo A(1, 1).
+      </p>
+
+      <p>
+        <strong>Passo 1:</strong> Transladar A para a origem: T(-1, -1)
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A_1 &= (1 - 1,\, 1 - 1) = (0, 0) \\
+        B_1 &= (3 - 1,\, 1 - 1) = (2, 0) \\
+        C_1 &= (2 - 1,\, 3 - 1) = (1, 2)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Passo 2:</strong> Aplicar rotação R(90°):
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A_2 &= \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+        = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \\
+        B_2 &= \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} \begin{bmatrix} 2 \\ 0 \end{bmatrix}
+        = \begin{bmatrix} 0 \\ 2 \end{bmatrix} \\
+        C_2 &= \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix}
+        = \begin{bmatrix} -2 \\ 1 \end{bmatrix}
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Passo 3:</strong> Transladar de volta: T(1, 1)
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A' &= (0 + 1,\, 0 + 1) = (1, 1) \\
+        B' &= (0 + 1,\, 2 + 1) = (1, 3) \\
+        C' &= (-2 + 1,\, 1 + 1) = (-1, 2)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O triângulo foi rotacionado 90° em torno do vértice A. O vértice A permaneceu fixo
+        em (1, 1), enquanto B foi movido de (3, 1) para (1, 3) e C foi movido de (2, 3) para
+        (-1, 2), ambos descrevendo arcos de 90° em torno de A.
+      </p>
+
+      <h4>5.3.3 Caso Especial: Centróide</h4>
+
+      <p>
+        Em muitas aplicações, deseja-se rotacionar ou escalar em torno do <strong>centróide</strong>
+        (centro geométrico) do polígono. O centróide de n vértices é calculado como:
+      </p>
+
+      <div class="math-block">
+        $$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i, \quad \bar{y} = \frac{1}{n}\sum_{i=1}^{n} y_i$$
+      </div>
+
+      <p>
+        Transformações em torno do centróide produzem resultados visualmente naturais, pois o objeto
+        gira ou escala em torno do seu próprio centro.
+      </p>
+
+      <p>
+        <strong>Exemplo 5.6:</strong> Calcular o centróide do triângulo com vértices A(1, 1), B(5, 1) e C(3, 5):
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        \bar{x} &= \frac{1 + 5 + 3}{3} = \frac{9}{3} = 3 \\
+        \bar{y} &= \frac{1 + 1 + 5}{3} = \frac{7}{3} \approx 2.33
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O centróide está localizado em G(3, 2.33). Para rotacionar este triângulo em torno de seu
+        centro, utilizaríamos P = G nas transformações com ponto fixo.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Polígono rotacionando em torno do centróide (marcado com +) -->
+
+
+      <div class="theorem-box">
+        <p>
+          <strong>Implementação em WebGL:</strong> O código existente em <code>animation2d/index.js</code>
+          implementa transformações com ponto fixo através da variável <code>isCentering</code> (linha 7)
+          e da função <code>toggleCentering()</code> (linha 9-11). O vertex shader (linhas 157-190)
+          aplica o algoritmo de translação-transformação-translação usando o uniform <code>u_center</code>
+          quando <code>isCenter</code> é verdadeiro.
+        </p>
+      </div>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 6: Versão avançada do animation2d/ -->
+      <div class="demo-section">
+        <div class="demo-header">
+          <h3>Demonstração 5.1: Transformações Geométricas com Ponto Fixo</h3>
+          <p class="demo-description">
+            Selecione polígonos e aplique transformações com controle de ponto fixo. Utilize a checkbox
+            "Usar centróide" para alternar entre transformação em torno da origem ou do centro geométrico.
+            Observe como a composição de transformações afeta o resultado final.
+          </p>
+        </div>
+        <div class="demo-container">
+          <!-- TODO: DEMO 6 - animation2d/ expandido com controles de transformação geométrica -->
+          <!-- Interface com: translação (sliders X, Y), escala (sx, sy), rotação (ângulo) -->
+          <!-- Checkbox para ponto fixo: origem / centróide / vértice selecionável -->
+          <!-- Visualização de polígono original (tracejado) e transformado (sólido) -->
+          <!-- Exibir matrizes individuais e composta -->
+          <iframe src="./animation2d/index.html" title="Demo: Transformações Geométricas"></iframe>
+        </div>
       </div>
     </article>
 
-    <!-- Demonstração Interativa -->
-    <article id="secao4">
-      <span class="section-label">4. Implementação e Resultados</span>
-      <h2>Ferramenta Pedagógica Interativa</h2>
-      
+    <div class="section-divider"></div>
+
+    <!-- Transformações Aplicadas aos Poliedros -->
+    <article id="secao6">
+      <span class="section-label">6. Transformações Aplicadas aos Poliedros (ℝ³)</span>
+      <h2>Transformações Geométricas no Espaço Tridimensional</h2>
+
       <p>
-        Esta seção apresenta uma implementação prática dos conceitos teóricos discutidos, desenvolvida 
-        utilizando a API WebGL para renderização gráfica em tempo real. A ferramenta permite a 
-        visualização dinâmica de transformações lineares aplicadas a objetos geométricos, estabelecendo 
-        uma conexão direta entre a teoria matemática e sua aplicação computacional.
+        As transformações geométricas estendem-se ao espaço tridimensional, permitindo manipulação
+        de poliedros através de translações, rotações e escalas com pontos fixos arbitrários. Assim como
+        em ℝ², utiliza-se <strong>coordenadas homogêneas</strong> para representar transformações afins
+        como multiplicação matricial, empregando matrizes 4×4.
       </p>
 
-      <div class="demo-section">
-        <div class="demo-header">
-          <h3>Demonstração: Transformações Lineares no Plano</h3>
-          <p class="demo-description">
-            A aplicação abaixo demonstra interativamente as transformações lineares estudadas. 
-            Utilize os controles para aplicar rotações, escalas e translações, observando em tempo 
-            real o efeito das operações matriciais sobre os vértices dos objetos renderizados.
-          </p>
-        </div>
-        
-        <div class="demo-container">
-          <iframe src="./animation2d/index.html" title="Demonstração Interativa de Transformações Lineares em WebGL"></iframe>
-        </div>
+      <h3 id="secao6-1">6.1 Translação em 3D</h3>
+
+      <p>
+        Translação desloca todos os vértices de um poliedro por um vetor (α, β, γ):
+      </p>
+
+      <div class="math-block">
+        $$(x', y', z') = (x + \alpha,\, y + \beta,\, z + \gamma)$$
       </div>
 
       <p>
-        Cada transformação visualizada corresponde a operações matriciais executadas pela GPU, onde 
-        os vértices dos objetos são processados através de multiplicações com as matrizes de transformação 
-        correspondentes. Este processo demonstra a aplicação prática dos fundamentos teóricos da álgebra 
-        linear na criação de gráficos computacionais interativos.
+        <strong>Exemplo 6.1:</strong> Transladar o tetraedro com vértices A(1, 0, 0), B(0, 1, 0),
+        C(0, 0, 1) e D(0, 0, 0) por vetor (2, -1, 3):
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A' &= (1 + 2,\, 0 + (-1),\, 0 + 3) = (3, -1, 3) \\
+        B' &= (0 + 2,\, 1 + (-1),\, 0 + 3) = (2, 0, 3) \\
+        C' &= (0 + 2,\, 0 + (-1),\, 1 + 3) = (2, -1, 4) \\
+        D' &= (0 + 2,\, 0 + (-1),\, 0 + 3) = (2, -1, 3)
+        \end{aligned}$$
+      </div>
+
+      <!-- TODO: ADICIONAR IMAGEM - Tetraedro sendo transladado no espaço 3D com vetor destacado -->
+
+      <h3 id="secao6-2">6.2 Escala com Ponto Fixo em 3D</h3>
+
+      <p>
+        Para escalar um poliedro mantendo ponto P(p<sub>x</sub>, p<sub>y</sub>, p<sub>z</sub>) fixo,
+        aplica-se o algoritmo:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        &\text{1. Transladar P para a origem:} \quad T(-p_x, -p_y, -p_z) \\
+        &\text{2. Aplicar escala:} \quad S(s_x, s_y, s_z) \\
+        &\text{3. Transladar de volta:} \quad T(p_x, p_y, p_z)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        A matriz de escala 3D (não-uniforme) é:
+      </p>
+
+      <div class="math-block">
+        $$S(s_x, s_y, s_z) = \begin{bmatrix}
+        s_x & 0 & 0 \\
+        0 & s_y & 0 \\
+        0 & 0 & s_z
+        \end{bmatrix}$$
+      </div>
+
+      <!-- TODO: ADICIONAR IMAGEM - Tetraedro sendo escalado com vértice D fixo destacado -->
+
+      <h3 id="secao6-3">6.3 Rotação com Ponto Fixo em 3D</h3>
+
+      <p>
+        Para rotacionar um poliedro θ radianos em torno de um eixo, mantendo ponto P fixo:
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        &\text{1. Transladar P à origem:} \quad T(-p_x, -p_y, -p_z) \\
+        &\text{2. Aplicar rotação no eixo desejado:} \quad R_{\text{eixo}}(\theta) \\
+        &\text{3. Transladar de volta:} \quad T(p_x, p_y, p_z)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        As matrizes de rotação em 3D em torno dos eixos coordenados são:
+      </p>
+
+      <div class="math-block">
+        $$R_x(\theta) = \begin{bmatrix}
+        1 & 0 & 0 \\
+        0 & \cos\theta & -\sin\theta \\
+        0 & \sin\theta & \cos\theta
+        \end{bmatrix}$$
+      </div>
+
+      <div class="math-block">
+        $$R_y(\theta) = \begin{bmatrix}
+        \cos\theta & 0 & \sin\theta \\
+        0 & 1 & 0 \\
+        -\sin\theta & 0 & \cos\theta
+        \end{bmatrix}$$
+      </div>
+
+      <div class="math-block">
+        $$R_z(\theta) = \begin{bmatrix}
+        \cos\theta & -\sin\theta & 0 \\
+        \sin\theta & \cos\theta & 0 \\
+        0 & 0 & 1
+        \end{bmatrix}$$
+      </div>
+
+      <p>
+        <strong>Exemplo 6.2:</strong> Rotacionar o tetraedro com vértices A(2, 0, 0), B(1, 1, 0),
+        C(1, 0, 1) e D(1, 0, 0) por 90° em torno do eixo Y, mantendo D(1, 0, 0) fixo.
       </p>
 
       <p>
-        A renderização em tempo real ilustra ainda a eficiência das operações matriciais em hardware 
-        dedicado, permitindo o processamento de milhares de vértices em cada quadro de animação, 
-        mantendo taxas de atualização superiores a 60 frames por segundo.
+        <strong>Passo 1:</strong> Transladar D para origem: T(-1, 0, 0)
       </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A_1 &= (2 - 1,\, 0,\, 0) = (1, 0, 0) \\
+        B_1 &= (1 - 1,\, 1,\, 0) = (0, 1, 0) \\
+        C_1 &= (1 - 1,\, 0,\, 1) = (0, 0, 1) \\
+        D_1 &= (1 - 1,\, 0,\, 0) = (0, 0, 0)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Passo 2:</strong> Aplicar rotação R<sub>y</sub>(90°):
+      </p>
+
+      <div class="math-block">
+        $$R_y(90°) = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{bmatrix}$$
+      </div>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A_2 &= \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{bmatrix}
+        \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ -1 \end{bmatrix} \\
+        B_2 &= \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{bmatrix}
+        \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix} \\
+        C_2 &= \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{bmatrix}
+        \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} \\
+        D_2 &= \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}
+        \end{aligned}$$
+      </div>
+
+      <p>
+        <strong>Passo 3:</strong> Transladar de volta: T(1, 0, 0)
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        A' &= (0 + 1,\, 0,\, -1) = (1, 0, -1) \\
+        B' &= (0 + 1,\, 1,\, 0) = (1, 1, 0) \\
+        C' &= (1 + 1,\, 0,\, 0) = (2, 0, 0) \\
+        D' &= (0 + 1,\, 0,\, 0) = (1, 0, 0)
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O tetraedro foi rotacionado 90° em torno do eixo Y. O vértice D permaneceu fixo em (1, 0, 0),
+        enquanto os demais vértices descreveram arcos de 90° ao redor deste ponto.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Tetraedro rotacionando 90° em torno do eixo Y com ponto fixo D -->
+
+      <h3 id="secao6-4">6.4 Centróide de Poliedros</h3>
+
+      <p>
+        O centróide (centro geométrico) de um poliedro com n vértices é calculado como:
+      </p>
+
+      <div class="math-block">
+        $$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i, \quad
+        \bar{y} = \frac{1}{n}\sum_{i=1}^{n} y_i, \quad
+        \bar{z} = \frac{1}{n}\sum_{i=1}^{n} z_i$$
+      </div>
+
+      <p>
+        <strong>Exemplo 6.3:</strong> Calcular o centróide do tetraedro com vértices A(1, 0, 0),
+        B(0, 1, 0), C(0, 0, 1) e D(0, 0, 0):
+      </p>
+
+      <div class="math-block">
+        $$\begin{aligned}
+        \bar{x} &= \frac{1 + 0 + 0 + 0}{4} = 0.25 \\
+        \bar{y} &= \frac{0 + 1 + 0 + 0}{4} = 0.25 \\
+        \bar{z} &= \frac{0 + 0 + 1 + 0}{4} = 0.25
+        \end{aligned}$$
+      </div>
+
+      <p>
+        O centróide está em G(0.25, 0.25, 0.25). Para rotacionar este tetraedro em torno de seu centro,
+        utilizaríamos P = G nas transformações com ponto fixo.
+      </p>
+
+      <!-- TODO: ADICIONAR IMAGEM - Poliedro com centróide destacado no centro -->
+
+      <h3 id="secao6-5">6.5 Aplicações em Gráficos 3D</h3>
+
+      <p>
+        Transformações geométricas 3D são fundamentais em:
+      </p>
+
+      <p>
+        <strong>Modelagem 3D:</strong> Softwares CAD (AutoCAD, Blender) permitem manipular objetos
+        através de transformações interativas. Cada operação de mover, rotacionar ou escalar aplica
+        as matrizes.
+      </p>
+
+      <p>
+        <strong>Animação:</strong> Engines como Unity e Unreal armazenam a transformação de cada
+        objeto como componentes de posição (translação), rotação e escala.
+        Animações interpolam entre estados de transformação ao longo do tempo.
+      </p>
+
+      <p>
+        <strong>Scene Graphs:</strong> Estruturas hierárquicas onde transformações de objetos-pai
+        afetam objetos-filhos. Por exemplo, em um modelo de braço robótico, rotacionar o ombro
+        move automaticamente cotovelo e mão através de composição de matrizes.
+      </p>
+
+      <div class="theorem-box">
+        <p>
+          <strong>Coordenadas Locais vs. Globais:</strong> Em um scene graph, cada objeto possui
+          transformação <strong>local</strong> (relativa ao pai) e <strong>global</strong>
+          (relativa à origem do mundo). A transformação global é obtida multiplicando todas as
+          matrizes da hierarquia desde a raiz até o objeto.
+        </p>
+      </div>
+
+      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 7: WebGL 3D ou Three.js -->
+      <!-- Funcionalidades:
+           - Selecionar poliedro (tetraedro, cubo, octaedro)
+           - Controles de câmera (orbit controls)
+           - Translação 3D (sliders X, Y, Z)
+           - Escala com ponto fixo (selecionar vértice ou usar centróide)
+           - Rotação com ângulos de Euler (sliders pitch, yaw, roll)
+           - Visualizar eixos coordenados
+           - Toggle wireframe
+           - Exibir matriz 4x4 composta
+      -->
     </article>
   </main>
 

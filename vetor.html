@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vetores Interativos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 15px;
+            gap: 15px;
+        }
+        .header {
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .header h1 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: #4a90e2;
+            font-weight: 600;
+        }
+        .header p {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .canvas-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+        }
+        canvas {
+            border: 2px solid #333;
+            background: #000;
+            cursor: crosshair;
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        .matrix-container {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 6px;
+            padding: 12px 20px;
+            flex-shrink: 0;
+        }
+        .matrix-title {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            color: #4a90e2;
+            font-weight: bold;
+            text-align: center;
+        }
+        .matrix-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            gap: 8px;
+        }
+        .bracket {
+            font-size: 2.5rem;
+            font-weight: 100;
+            color: #4a90e2;
+            line-height: 1;
+        }
+        .matrix-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .matrix-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .matrix-value {
+            min-width: 55px;
+            text-align: right;
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .vector-1 { color: #3b82f6; }
+        .vector-2 { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <p>Arraste os pontos para mover os vetores e veja a matriz atualizar</p>
+        </div>
+
+        <div class="canvas-wrapper">
+            <canvas id="canvas" width="600" height="380"></canvas>
+        </div>
+
+        <div class="matrix-container">
+            <div class="matrix-title">Matriz de Vetores (cada linha = 1 vetor)</div>
+            <div class="matrix-display">
+                <span class="bracket">[</span>
+                <div class="matrix-content" id="matrixContent">
+                    <div class="matrix-row">
+                        <span class="matrix-value vector-1" id="v1x">0.00</span>
+                        <span class="matrix-value vector-1" id="v1y">0.00</span>
+                    </div>
+                    <div class="matrix-row">
+                        <span class="matrix-value vector-2" id="v2x">0.00</span>
+                        <span class="matrix-value vector-2" id="v2y">0.00</span>
+                    </div>
+                </div>
+                <span class="bracket">]</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Elementos da matriz
+        const v1xElem = document.getElementById('v1x');
+        const v1yElem = document.getElementById('v1y');
+        const v2xElem = document.getElementById('v2x');
+        const v2yElem = document.getElementById('v2y');
+
+        // Centro do canvas (origem do sistema de coordenadas)
+        const origin = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        // Escala para converter coordenadas de canvas para valores matemáticos
+        const scale = 100;
+
+        // Vetores representados por pontos (x, y) relativos à origem
+        let points = [
+            { x: 50, y: 50, isDragging: false },   // Vetor 1 (azul)
+            { x: -30, y: -70, isDragging: false }  // Vetor 2 (vermelho)
+        ];
+
+        // Função para atualizar a matriz
+        function updateMatrix() {
+            const v1x = (points[0].x / scale).toFixed(2);
+            const v1y = (points[0].y / scale).toFixed(2);
+            const v2x = (points[1].x / scale).toFixed(2);
+            const v2y = (points[1].y / scale).toFixed(2);
+
+            v1xElem.textContent = v1x;
+            v1yElem.textContent = v1y;
+            v2xElem.textContent = v2x;
+            v2yElem.textContent = v2y;
+        }
+
+        // Função para desenhar no canvas
+        function draw() {
+            // Limpa o canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Desenha grade de fundo
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            for (let i = -canvas.width/2; i < canvas.width/2; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(origin.x + i, 0);
+                ctx.lineTo(origin.x + i, canvas.height);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, origin.y + i);
+                ctx.lineTo(canvas.width, origin.y + i);
+                ctx.stroke();
+            }
+
+            // Desenha eixos principais
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, origin.y);
+            ctx.lineTo(canvas.width, origin.y);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(origin.x, 0);
+            ctx.lineTo(origin.x, canvas.height);
+            ctx.stroke();
+
+            // Desenha marcações nos eixos
+            ctx.fillStyle = '#666';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+
+            // Marcações no eixo X
+            for (let i = -2; i <= 2; i++) {
+                if (i !== 0) {
+                    const x = origin.x + i * scale;
+                    ctx.fillText(i.toString(), x, origin.y + 15);
+                }
+            }
+
+            // Marcações no eixo Y
+            ctx.textAlign = 'right';
+            for (let i = -1; i <= 1; i++) {
+                if (i !== 0) {
+                    const y = origin.y - i * scale;
+                    ctx.fillText(i.toString(), origin.x - 10, y + 4);
+                }
+            }
+
+            // Desenha vetores e pontos
+            points.forEach((point, index) => {
+                // Calcula posição no canvas (origem no centro)
+                const canvasX = origin.x + point.x;
+                const canvasY = origin.y - point.y; // Inverte Y para sistema cartesiano
+
+                // Desenha vetor (seta)
+                const color = index === 0 ? '#3b82f6' : '#ef4444';
+                ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+                ctx.lineWidth = 2;
+                drawArrow(ctx, origin.x, origin.y, canvasX, canvasY);
+
+                // Desenha ponto
+                ctx.beginPath();
+                ctx.arc(canvasX, canvasY, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Desenha label com coordenadas
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'left';
+                const labelX = (point.x / scale).toFixed(2);
+                const labelY = (point.y / scale).toFixed(2);
+                ctx.fillText(`v${index + 1}(${labelX}, ${labelY})`, canvasX + 10, canvasY - 10);
+            });
+
+            // Atualiza a matriz
+            updateMatrix();
+        }
+
+        // Função para desenhar uma seta
+        function drawArrow(ctx, fromX, fromY, toX, toY) {
+            const headLength = 12;
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const angle = Math.atan2(dy, dx);
+
+            // Linha do vetor
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+
+            // Ponta da seta
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(
+                toX - headLength * Math.cos(angle - Math.PI / 6),
+                toY - headLength * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.lineTo(
+                toX - headLength * Math.cos(angle + Math.PI / 6),
+                toY - headLength * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Detecta clique no canvas
+        canvas.addEventListener('mousedown', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            points.forEach((point) => {
+                const canvasX = origin.x + point.x;
+                const canvasY = origin.y - point.y;
+
+                if (Math.hypot(mouseX - canvasX, mouseY - canvasY) < 15) {
+                    point.isDragging = true;
+                }
+            });
+        });
+
+        // Move o ponto enquanto arrasta
+        canvas.addEventListener('mousemove', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            points.forEach((point) => {
+                if (point.isDragging) {
+                    point.x = mouseX - origin.x;
+                    point.y = -(mouseY - origin.y);
+                }
+            });
+
+            draw();
+        });
+
+        // Para de arrastar
+        canvas.addEventListener('mouseup', () => {
+            points.forEach((point) => {
+                point.isDragging = false;
+            });
+        });
+
+        // Impede arrastar fora do canvas
+        canvas.addEventListener('mouseleave', () => {
+            points.forEach((point) => {
+                point.isDragging = false;
+            });
+        });
+
+        // Desenha inicialmente
+        draw();
+    </script>
+</body>
+</html>
