@@ -862,7 +862,6 @@
         no WebGL, estes valores são convertidos em <strong>Float32Array</strong> e enviados à GPU.
       </p>
 
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 1: vetor.html -->
       <div class="demo-section">
         <div class="demo-header">
           <h3>Demonstração 2.1: Sistema de Coordenadas Cartesianas</h3>
@@ -872,7 +871,6 @@
           </p>
         </div>
         <div class="demo-container">
-          <!-- TODO: DEMO 1 - vetor.html mostrando plano cartesiano interativo -->
           <iframe src="./vetor.html" title="Demo: Plano Cartesiano"></iframe>
         </div>
       </div>
@@ -929,8 +927,18 @@
         </p>
       </div>
 
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 2: Interface para matriz 2×2 -->
-      <!-- Usuário insere valores da matriz e vê transformação aplicada a um polígono -->
+      <div class="demo-section">
+        <div class="demo-header">
+          <h3>Demonstração 2.2: Transformações Matriciais</h3>
+          <p class="demo-description">
+            Insira valores em uma matriz 2×2 e observe em tempo real a transformação aplicada a um triângulo.
+            Experimente os presets ou crie suas próprias transformações.
+          </p>
+        </div>
+        <div class="demo-container">
+          <iframe src="./matriz.html" title="Demo: Transformações Matriciais"></iframe>
+        </div>
+      </div>
 
       <h3 id="secao2-3">2.3 Transformação Linear</h3>
 
@@ -985,9 +993,6 @@
         de transformações a múltiplos vértices simultaneamente.
       </p>
 
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 3: Operações vetoriais -->
-      <!-- Mostrar adição de vetores, multiplicação por escalar, dependência linear -->
-
       <div class="theorem-box">
         <p>
           <strong>Aplicação em CG:</strong> Cada vértice de um polígono é um vetor posição. Transformações
@@ -1035,8 +1040,6 @@
         Aplicando reflexão no eixo x ao ponto (2, 3): R<sub>x</sub>(2, 3) = (2, -3).
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Visualização de triângulo sendo refletido nos eixos -->
-
       <h3 id="secao3-2">3.2 Dilatação e Contração (Escala)</h3>
 
       <p>
@@ -1053,8 +1056,6 @@
         ocorre <strong>contração</strong> (redução). Exemplo: S(2, 0.5) aplica ampliação horizontal
         de 2x e redução vertical pela metade.
       </p>
-
-      <!-- TODO: ADICIONAR IMAGEM - Quadrado sendo escalado com diferentes valores de α e β -->
 
       <h3 id="secao3-3">3.3 Cisalhamento</h3>
 
@@ -1074,7 +1075,14 @@
         Aplicação comum: criar efeitos de perspectiva e inclinação em fontes tipográficas.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Quadrado se transformando em paralelogramo com cisalhamento -->
+      <div class="figure-container">
+        <div class="figure-wrapper">
+          <img src="./assets/images/cisX.png" alt="Cisalhamento no eixo x" width="500">
+        </div>
+        <p class="figure-caption">
+          <strong>Figura 3.1.</strong> Cisalhamento no eixo x.
+        </p>
+      </div>
 
       <h3 id="secao3-4">3.4 Rotação</h3>
 
@@ -1101,8 +1109,6 @@
         A matriz de rotação possui determinante 1 e é ortogonal: R<sup>T</sup> = R<sup>-1</sup>.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Polígono girando continuamente ou em ângulos específicos -->
-
       <div class="theorem-box">
         <p>
           <strong>Composição de Transformações:</strong> Múltiplas transformações lineares podem
@@ -1111,11 +1117,6 @@
           Exemplo: rotacionar 45° e depois escalar 2x resulta em matriz M = S(2,2) · R(45°).
         </p>
       </div>
-
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 4: animation2d/ ou nova implementação -->
-      <!-- Interface permite selecionar tipo de transformação (reflexão, escala, cisalhamento, rotação) -->
-      <!-- Controles: botões para reflexão, sliders para escala/cisalhamento/rotação -->
-      <!-- Visualizar transformação em tempo real com matriz exibida -->
     </article>
 
     <div class="section-divider"></div>
@@ -1149,8 +1150,6 @@
         Aplicação: espelhar modelo 3D, criar simetrias em objetos tridimensionais.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Visualização de cubo sendo refletido nos planos coordenados -->
-
       <h3 id="secao4-2">4.2 Dilatação e Contração 3D</h3>
 
       <p>
@@ -1166,8 +1165,6 @@
       <p>
         Exemplo: S(2, 1, 0.5) duplica dimensão em x, mantém y, e reduz z pela metade.
       </p>
-
-      <!-- TODO: ADICIONAR IMAGEM - Cubo sendo escalado com diferentes fatores em cada eixo -->
 
       <h3 id="secao4-3">4.3 Rotações 3D</h3>
 
@@ -1187,8 +1184,6 @@
       <div class="math-block">
         $$\text{Rotação em torno do eixo } z: \quad R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
       </div>
-
-      <!-- TODO: ADICIONAR IMAGEM - Poliedro rotacionando em torno dos três eixos -->
 
       <h3 id="secao4-4">4.4 Exemplo: Tetraedro ABCD</h3>
 
@@ -1213,10 +1208,6 @@
         </p>
       </div>
 
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 5: Visualização 3D com Three.js ou WebGL -->
-      <!-- Poliedro 3D (tetraedro, cubo, octaedro) com controles de câmera -->
-      <!-- Selecionar transformação: reflexão (plano), escala (x,y,z), rotação (eixo e ângulo) -->
-      <!-- Visualizar eixos coordenados e matriz 3×3 aplicada -->
     </article>
 
     <div class="section-divider"></div>
@@ -1281,8 +1272,6 @@
         deslocamento de câmera.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Triângulo se movendo no plano com vetor de translação destacado -->
-
       <h4>5.2.2 Escala (Ampliação/Redução)</h4>
 
       <p>
@@ -1322,8 +1311,6 @@
         e metade da altura (reduzido em y). Esta é uma escala não-uniforme.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Quadrado sendo redimensionado com diferentes fatores em x e y -->
-
       <h4>5.2.3 Rotação</h4>
 
       <p>
@@ -1357,8 +1344,6 @@
         O ponto P(2, 0), localizado no eixo x positivo, foi rotacionado 90° para a posição P'(0, 2)
         no eixo y positivo, como esperado para uma rotação anti-horária.
       </p>
-
-      <!-- TODO: ADICIONAR IMAGEM - Triângulo rotacionando 45° em torno da origem -->
 
       <h3 id="secao5-3">5.3 Transformações com Ponto Fixo</h3>
 
@@ -1433,8 +1418,6 @@
         O vértice A permaneceu em (1, 1) como ponto fixo, enquanto os vértices B e C tiveram
         suas distâncias relativas a A duplicadas.
       </p>
-
-      <!-- TODO: ADICIONAR IMAGEM - Triângulo sendo escalado com vértice A fixo e marcado -->
 
       <h4>5.3.2 Rotação com Ponto Fixo</h4>
 
@@ -1533,9 +1516,6 @@
         centro, utilizaríamos P = G nas transformações com ponto fixo.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Polígono rotacionando em torno do centróide (marcado com +) -->
-
-
       <div class="theorem-box">
         <p>
           <strong>Implementação em WebGL:</strong> O código existente em <code>animation2d/index.js</code>
@@ -1546,7 +1526,6 @@
         </p>
       </div>
 
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 6: Versão avançada do animation2d/ -->
       <div class="demo-section">
         <div class="demo-header">
           <h3>Demonstração 5.1: Transformações Geométricas com Ponto Fixo</h3>
@@ -1557,11 +1536,6 @@
           </p>
         </div>
         <div class="demo-container">
-          <!-- TODO: DEMO 6 - animation2d/ expandido com controles de transformação geométrica -->
-          <!-- Interface com: translação (sliders X, Y), escala (sx, sy), rotação (ângulo) -->
-          <!-- Checkbox para ponto fixo: origem / centróide / vértice selecionável -->
-          <!-- Visualização de polígono original (tracejado) e transformado (sólido) -->
-          <!-- Exibir matrizes individuais e composta -->
           <iframe src="./animation2d/index.html" title="Demo: Transformações Geométricas"></iframe>
         </div>
       </div>
@@ -1734,8 +1708,6 @@
         enquanto os demais vértices descreveram arcos de 90° ao redor deste ponto.
       </p>
 
-      <!-- TODO: ADICIONAR IMAGEM - Tetraedro rotacionando 90° em torno do eixo Y com ponto fixo D -->
-
       <h3 id="secao6-4">6.4 Centróide de Poliedros</h3>
 
       <p>
@@ -1765,8 +1737,6 @@
         O centróide está em G(0.25, 0.25, 0.25). Para rotacionar este tetraedro em torno de seu centro,
         utilizaríamos P = G nas transformações com ponto fixo.
       </p>
-
-      <!-- TODO: ADICIONAR IMAGEM - Poliedro com centróide destacado no centro -->
 
       <h3 id="secao6-5">6.5 Aplicações em Gráficos 3D</h3>
 
@@ -1800,23 +1770,10 @@
           matrizes da hierarquia desde a raiz até o objeto.
         </p>
       </div>
-
-      <!-- TODO: ADICIONAR ANIMAÇÃO INTERATIVA - Demo 7: WebGL 3D ou Three.js -->
-      <!-- Funcionalidades:
-           - Selecionar poliedro (tetraedro, cubo, octaedro)
-           - Controles de câmera (orbit controls)
-           - Translação 3D (sliders X, Y, Z)
-           - Escala com ponto fixo (selecionar vértice ou usar centróide)
-           - Rotação com ângulos de Euler (sliders pitch, yaw, roll)
-           - Visualizar eixos coordenados
-           - Toggle wireframe
-           - Exibir matriz 4x4 composta
-      -->
     </article>
   </main>
 
   <script>
-    // Scroll Progress Bar and TOC Progress
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1824,17 +1781,15 @@
       document.getElementById('progressBar').style.width = scrolled + '%';
       document.getElementById('tocProgressFill').style.width = scrolled + '%';
 
-      // Update active section in TOC
       updateActiveSection();
     });
 
-    // Update active section based on scroll position
     function updateActiveSection() {
       const sections = document.querySelectorAll('article[id], h3[id]');
       const tocItems = document.querySelectorAll('.toc-item');
 
       let currentSection = '';
-      const scrollPosition = window.scrollY + 200; // Offset for better UX
+      const scrollPosition = window.scrollY + 200;
 
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
@@ -1853,7 +1808,6 @@
       });
     }
 
-    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -1861,7 +1815,6 @@
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-          // Close sidebar on mobile after clicking
           if (window.innerWidth <= 1024) {
             document.getElementById('tocSidebar').classList.remove('open');
           }
@@ -1869,12 +1822,10 @@
       });
     });
 
-    // Toggle TOC Sidebar on mobile
     document.getElementById('tocToggle').addEventListener('click', () => {
       document.getElementById('tocSidebar').classList.toggle('open');
     });
 
-    // Collapse/Expand TOC Sidebar on desktop
     document.getElementById('tocCollapseBtn').addEventListener('click', () => {
       const sidebar = document.getElementById('tocSidebar');
       const collapseBtn = document.getElementById('tocCollapseBtn');
@@ -1884,7 +1835,6 @@
       body.classList.toggle('sidebar-collapsed');
       collapseBtn.classList.toggle('collapsed');
 
-      // Change arrow direction
       if (sidebar.classList.contains('collapsed')) {
         collapseBtn.textContent = '▶';
         collapseBtn.title = 'Expandir menu';
@@ -1894,7 +1844,6 @@
       }
     });
 
-    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
       const sidebar = document.getElementById('tocSidebar');
       const toggle = document.getElementById('tocToggle');
@@ -1907,7 +1856,6 @@
       }
     });
 
-    // Initialize active section on load
     updateActiveSection();
   </script>
 </body>

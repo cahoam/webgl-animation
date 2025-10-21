@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformações Matriciais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .header {
+            background: #111;
+            border-bottom: 2px solid #333;
+            padding: 8px 15px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .header p {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin: 0;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+        .controls {
+            background: #0a0a0a;
+            border-bottom: 2px solid #333;
+            padding: 12px 15px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+        }
+        .controls-inner {
+            display: flex;
+            gap: 20px;
+            min-width: min-content;
+        }
+        .section {
+            flex-shrink: 0;
+            padding-right: 20px;
+            border-right: 1px solid #222;
+        }
+        .section:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+        .section-title {
+            font-size: 0.7rem;
+            color: #4a90e2;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .matrix-display {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .bracket {
+            font-size: 2rem;
+            color: #4a90e2;
+            text-align: center;
+            line-height: 1;
+            font-weight: 100;
+        }
+        .matrix-inputs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+        }
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .input-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        .matrix-input {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 6px 4px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.2s;
+            width: 50px;
+        }
+        .matrix-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            background: #222;
+        }
+        .matrix-input:hover {
+            border-color: #4a90e2;
+        }
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            width: 180px;
+        }
+        .preset-btn {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.68rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .preset-btn:hover {
+            background: #1a1a1a;
+            border-color: #4a90e2;
+            transform: scale(1.02);
+        }
+        .preset-name {
+            font-weight: 500;
+        }
+        .preset-matrix {
+            display: none;
+        }
+        .preset-section {
+            width: 180px;
+        }
+        .info-section {
+            max-width: 250px;
+        }
+        .info-box {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 0.65rem;
+            color: #888;
+            line-height: 1.3;
+        }
+        .info-box strong {
+            color: #4a90e2;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.65rem;
+        }
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            padding: 4px 6px;
+            border-radius: 3px;
+            margin-top: 4px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        .canvas-wrapper {
+            flex: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        canvas {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .legend {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.65rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+        .legend-color {
+            width: 16px;
+            height: 2px;
+            border-radius: 1px;
+        }
+        .canvas-drag-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <p>Insira valores na matriz 2×2 e observe a transformação aplicada ao triângulo • Arraste o canvas para mover a visualização</p>
+        </div>
+
+        <div class="main-content">
+            <div class="controls">
+                <div class="controls-inner">
+                    <div class="section">
+                        <div class="section-title">Matriz</div>
+                        <div class="matrix-display">
+                            <span class="bracket">[</span>
+                            <div class="matrix-inputs">
+                                <div class="input-wrapper">
+                                    <span class="input-label">a</span>
+                                    <input type="number" id="m00" class="matrix-input" value="1" step="0.1">
+                                </div>
+                                <div class="input-wrapper">
+                                    <span class="input-label">b</span>
+                                    <input type="number" id="m01" class="matrix-input" value="0" step="0.1">
+                                </div>
+                                <div class="input-wrapper">
+                                    <span class="input-label">c</span>
+                                    <input type="number" id="m10" class="matrix-input" value="0" step="0.1">
+                                </div>
+                                <div class="input-wrapper">
+                                    <span class="input-label">d</span>
+                                    <input type="number" id="m11" class="matrix-input" value="1" step="0.1">
+                                </div>
+                            </div>
+                            <span class="bracket">]</span>
+                        </div>
+                    </div>
+
+                    <div class="section preset-section">
+                        <div class="section-title">Transformações</div>
+                        <div class="presets-grid">
+                            <button class="preset-btn" onclick="applyPreset('identity')">
+                                <span class="preset-name">Identidade</span>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('scale2')">
+                                <span class="preset-name">Escala 2×</span>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('scaleX')">
+                                <span class="preset-name">Escala X</span>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('reflectX')">
+                                <span class="preset-name">Reflexão X</span>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('reflectY')">
+                                <span class="preset-name">Reflexão Y</span>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('rotate90')">
+                                <span class="preset-name">Rotação 90°</span>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('shearX')">
+                                <span class="preset-name">Cisalhamento</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="section info-section">
+                        <div class="section-title">Fórmula</div>
+                        <div class="info-box">
+                            <strong>Multiplicação Matriz × Vetor</strong>
+                            <div class="formula">x' = a×x + b×y<br>y' = c×x + d×y</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="canvas" width="900" height="500"></canvas>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #666;"></div>
+                        <span>Original</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4a90e2;"></div>
+                        <span>Transformado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Elementos da matriz
+        const m00 = document.getElementById('m00');
+        const m01 = document.getElementById('m01');
+        const m10 = document.getElementById('m10');
+        const m11 = document.getElementById('m11');
+
+        // Centro do canvas e controle de pan
+        let offset = { x: 0, y: 0 };
+        let isDragging = false;
+        let lastMousePos = { x: 0, y: 0 };
+        const baseOrigin = { x: canvas.width / 2, y: canvas.height / 2 };
+        const scale = 80;
+
+        function getOrigin() {
+            return {
+                x: baseOrigin.x + offset.x,
+                y: baseOrigin.y + offset.y
+            };
+        }
+
+        // Triângulo original (coordenadas matemáticas)
+        const originalTriangle = [
+            { x: 0, y: 0 },
+            { x: 2, y: 0 },
+            { x: 1, y: 2 }
+        ];
+
+        // Presets de transformações
+        const presets = {
+            identity: [1, 0, 0, 1],
+            scale2: [2, 0, 0, 2],
+            scaleX: [2, 0, 0, 1],
+            reflectX: [1, 0, 0, -1],
+            reflectY: [-1, 0, 0, 1],
+            rotate90: [0, -1, 1, 0],
+            shearX: [1, 0.5, 0, 1]
+        };
+
+        function applyPreset(presetName) {
+            const [a, b, c, d] = presets[presetName];
+            m00.value = a;
+            m01.value = b;
+            m10.value = c;
+            m11.value = d;
+            draw();
+        }
+
+        function applyMatrix(point, matrix) {
+            const [a, b, c, d] = matrix;
+            return {
+                x: a * point.x + b * point.y,
+                y: c * point.x + d * point.y
+            };
+        }
+
+        function toCanvasCoords(point) {
+            const origin = getOrigin();
+            return {
+                x: origin.x + point.x * scale,
+                y: origin.y - point.y * scale
+            };
+        }
+
+        function drawPolygon(vertices, color, lineWidth, dashed = false) {
+            if (vertices.length === 0) return;
+
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color + '20';
+            ctx.lineWidth = lineWidth;
+
+            if (dashed) {
+                ctx.setLineDash([5, 5]);
+            } else {
+                ctx.setLineDash([]);
+            }
+
+            ctx.beginPath();
+            const first = toCanvasCoords(vertices[0]);
+            ctx.moveTo(first.x, first.y);
+
+            for (let i = 1; i < vertices.length; i++) {
+                const point = toCanvasCoords(vertices[i]);
+                ctx.lineTo(point.x, point.y);
+            }
+
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Desenha vértices
+            ctx.setLineDash([]);
+            vertices.forEach((vertex, index) => {
+                const canvasPoint = toCanvasCoords(vertex);
+                ctx.beginPath();
+                ctx.arc(canvasPoint.x, canvasPoint.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+
+                // Label do vértice
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 15px Arial';
+                ctx.fillText(
+                    `(${vertex.x.toFixed(1)}, ${vertex.y.toFixed(1)})`,
+                    canvasPoint.x + 8,
+                    canvasPoint.y - 8
+                );
+            });
+        }
+
+        function drawGrid() {
+            const origin = getOrigin();
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+
+            // Grade vertical
+            for (let x = -10; x <= 10; x++) {
+                ctx.beginPath();
+                ctx.moveTo(origin.x + x * scale, 0);
+                ctx.lineTo(origin.x + x * scale, canvas.height);
+                ctx.stroke();
+            }
+
+            // Grade horizontal
+            for (let y = -10; y <= 10; y++) {
+                ctx.beginPath();
+                ctx.moveTo(0, origin.y + y * scale);
+                ctx.lineTo(canvas.width, origin.y + y * scale);
+                ctx.stroke();
+            }
+
+            // Eixos principais
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 2;
+
+            // Eixo X
+            ctx.beginPath();
+            ctx.moveTo(0, origin.y);
+            ctx.lineTo(canvas.width, origin.y);
+            ctx.stroke();
+
+            // Eixo Y
+            ctx.beginPath();
+            ctx.moveTo(origin.x, 0);
+            ctx.lineTo(origin.x, canvas.height);
+            ctx.stroke();
+
+            // Marcações
+            ctx.fillStyle = '#666';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+
+            for (let i = -10; i <= 10; i++) {
+                if (i !== 0) {
+                    const x = origin.x + i * scale;
+                    if (x > 0 && x < canvas.width) {
+                        ctx.fillText(i.toString(), x, origin.y + 15);
+                    }
+                }
+            }
+
+            ctx.textAlign = 'right';
+            for (let i = -10; i <= 10; i++) {
+                if (i !== 0) {
+                    const y = origin.y - i * scale;
+                    if (y > 0 && y < canvas.height) {
+                        ctx.fillText(i.toString(), origin.x - 10, y + 4);
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawGrid();
+
+            // Obtém valores da matriz
+            const matrix = [
+                parseFloat(m00.value) || 0,
+                parseFloat(m01.value) || 0,
+                parseFloat(m10.value) || 0,
+                parseFloat(m11.value) || 0
+            ];
+
+            // Aplica transformação
+            const transformedTriangle = originalTriangle.map(point =>
+                applyMatrix(point, matrix)
+            );
+
+            // Desenha triângulo original (tracejado, cinza)
+            drawPolygon(originalTriangle, '#666', 2, true);
+
+            // Desenha triângulo transformado (sólido, azul)
+            drawPolygon(transformedTriangle, '#4a90e2', 2, false);
+        }
+
+        // Event listeners para inputs
+        [m00, m01, m10, m11].forEach(input => {
+            input.addEventListener('input', draw);
+        });
+
+        // Event listeners para pan (arrastar canvas)
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMousePos = { x: e.offsetX, y: e.offsetY };
+            canvas.style.cursor = 'grabbing';
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const dx = e.offsetX - lastMousePos.x;
+                const dy = e.offsetY - lastMousePos.y;
+
+                offset.x += dx;
+                offset.y += dy;
+
+                lastMousePos = { x: e.offsetX, y: e.offsetY };
+                draw();
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+            canvas.style.cursor = 'grab';
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+            canvas.style.cursor = 'grab';
+        });
+
+        // Cursor inicial
+        canvas.style.cursor = 'grab';
+
+        // Desenha inicialmente
+        draw();
+    </script>
+</body>
+</html>
