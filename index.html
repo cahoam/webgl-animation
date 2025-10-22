@@ -722,7 +722,59 @@
       </a>
       <a href="#secao6" class="toc-item" data-section="6">
         <span class="toc-item-number">6</span>
-        Implementação WebGL
+        Transformações Aplicadas aos Poliedros
+      </a>
+      <a href="#secao6-1" class="toc-item toc-subsection" data-section="6.1">
+        <span class="toc-item-number">6.1</span>
+        Translação 3D
+      </a>
+      <a href="#secao6-2" class="toc-item toc-subsection" data-section="6.2">
+        <span class="toc-item-number">6.2</span>
+        Escala com Ponto Fixo em 3D
+      </a>
+      <a href="#secao6-3" class="toc-item toc-subsection" data-section="6.3">
+        <span class="toc-item-number">6.3</span>
+        Rotação com Ponto Fixo em 3D
+      </a>
+      <a href="#secao7" class="toc-item" data-section="7">
+        <span class="toc-item-number">7</span>
+        Métodos: WebGL
+      </a>
+      <a href="#secao7-1" class="toc-item toc-subsection" data-section="7.1">
+        <span class="toc-item-number">7.1</span>
+        Pipeline de Renderização
+      </a>
+      <a href="#secao7-2" class="toc-item toc-subsection" data-section="7.2">
+        <span class="toc-item-number">7.2</span>
+        Sistema de Coordenadas WebGL
+      </a>
+      <a href="#secao7-3" class="toc-item toc-subsection" data-section="7.3">
+        <span class="toc-item-number">7.3</span>
+        Shaders: Programação na GPU
+      </a>
+      <a href="#secao7-4" class="toc-item toc-subsection" data-section="7.4">
+        <span class="toc-item-number">7.4</span>
+        Buffers: Enviando Dados à GPU
+      </a>
+      <a href="#secao7-5" class="toc-item toc-subsection" data-section="7.5">
+        <span class="toc-item-number">7.5</span>
+        Uniforms: Parâmetros Globais
+      </a>
+      <a href="#secao7-6" class="toc-item toc-subsection" data-section="7.6">
+        <span class="toc-item-number">7.6</span>
+        Loop de Renderização
+      </a>
+      <a href="#secao7-7" class="toc-item toc-subsection" data-section="7.7">
+        <span class="toc-item-number">7.7</span>
+        Exemplo Completo
+      </a>
+      <a href="#secao7-8" class="toc-item toc-subsection" data-section="7.8">
+        <span class="toc-item-number">7.8</span>
+        Relação com Álgebra Linear
+      </a>
+      <a href="#secao7-9" class="toc-item toc-subsection" data-section="7.9">
+        <span class="toc-item-number">7.9</span>
+        Aplicação Prática: Sistema Interativo
       </a>
     </nav>
   </aside>
@@ -1579,20 +1631,6 @@
           quando <code>isCenter</code> é verdadeiro.
         </p>
       </div>
-
-      <div class="demo-section">
-        <div class="demo-header">
-          <h3>Demonstração 5.1: Transformações Geométricas com Ponto Fixo</h3>
-          <p class="demo-description">
-            Selecione polígonos e aplique transformações com controle de ponto fixo. Utilize a checkbox
-            "Usar centróide" para alternar entre transformação em torno da origem ou do centro geométrico.
-            Observe como a composição de transformações afeta o resultado final.
-          </p>
-        </div>
-        <div class="demo-container">
-          <iframe src="./animation2d/index.html" title="Demo: Transformações Geométricas"></iframe>
-        </div>
-      </div>
     </article>
 
     <div class="section-divider"></div>
@@ -1848,6 +1886,457 @@
           matrizes da hierarquia desde a raiz até o objeto.
         </p>
       </div>
+    </article>
+
+    <div class="section-divider"></div>
+
+    <!-- Métodos: WebGL -->
+    <article id="secao7">
+      <span class="section-label">7. Métodos: WebGL</span>
+      <h2>Animação em WebGL</h2>
+
+      <p>
+        WebGL (Web Graphics Library) é uma API JavaScript que permite renderização de gráficos
+        2D e 3D no navegador, executando nativamente na GPU sem necessidade de plugins. Baseada em
+        OpenGL ES, possibilita criar aplicações gráficas de alta performance acessíveis diretamente
+        pela web.
+      </p>
+
+      <h3 id="secao7-1">7.1 Pipeline de Renderização</h3>
+
+      <p>
+        O pipeline gráfico WebGL processa dados em cinco estágios principais:
+      </p>
+
+      <p>
+        <strong>1. Dados de vértices:</strong> Arrays com posições, cores e atributos dos vértices.
+      </p>
+
+      <p>
+        <strong>2. Vertex Shader:</strong> Programa executado na GPU que processa cada vértice individualmente,
+        aplicando transformações e calculando a posição final.
+      </p>
+
+      <p>
+        <strong>3. Rasterização:</strong> Converte primitivas geométricas (triângulos, linhas) em fragmentos (pixels).
+      </p>
+
+      <p>
+        <strong>4. Fragment Shader:</strong> Define a cor de cada fragmento/pixel.
+      </p>
+
+      <p>
+        <strong>5. Framebuffer:</strong> Imagem final exibida no canvas.
+      </p>
+
+      <!-- TODO: Adicionar diagrama do pipeline WebGL -->
+
+      <h3 id="secao7-2">7.2 Sistema de Coordenadas WebGL</h3>
+
+      <p>
+        WebGL utiliza <strong>Normalized Device Coordinates (NDC)</strong>, um espaço de coordenadas
+        normalizado onde todos os eixos variam de -1 a +1:
+      </p>
+
+      <div class="math-block">
+        $$\text{NDC: } x, y, z \in [-1, 1]$$
+      </div>
+
+      <p>
+        O centro do canvas está na origem (0, 0). O eixo X aumenta para direita, Y para cima,
+        e Z para dentro da tela (sistema de mão direita).
+      </p>
+
+      <!-- TODO: Adicionar figura do sistema NDC -->
+
+      <h3 id="secao7-3">7.3 Shaders: Programação na GPU</h3>
+
+      <p>
+        Shaders são pequenos programas escritos em GLSL (OpenGL Shading Language) que executam
+        diretamente na GPU. Dois tipos são obrigatórios:
+      </p>
+
+      <h4>7.3.1 Vertex Shader</h4>
+
+      <p>
+        Processa cada vértice, calculando sua posição final e passando dados interpolados para
+        o Fragment Shader:
+      </p>
+
+      <div class="code-block">
+        <pre><code>attribute vec2 a_position;  // Posição do vértice
+attribute vec4 a_color;     // Cor do vértice
+varying vec4 v_color;       // Saída para fragment shader
+
+void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+    v_color = a_color;
+}</code></pre>
+      </div>
+
+      <p>
+        <strong>Tipos de variáveis:</strong>
+      </p>
+
+      <p>
+        <strong>attribute:</strong> Entrada por vértice (JavaScript → Vertex Shader).
+      </p>
+
+      <p>
+        <strong>uniform:</strong> Valor constante para todos os vértices (parâmetros globais).
+      </p>
+
+      <p>
+        <strong>varying:</strong> Saída interpolada entre vértices, passada ao Fragment Shader.
+      </p>
+
+      <p>
+        <strong>gl_Position:</strong> Variável built-in que define a posição final do vértice (vec4).
+      </p>
+
+      <h4>7.3.2 Vertex Shader com Transformações</h4>
+
+      <p>
+        A implementação de transformações geométricas ocorre diretamente no Vertex Shader:
+      </p>
+
+      <div class="code-block">
+        <pre><code>attribute vec2 a_position;
+uniform vec2 u_translation;
+uniform float u_rotation;
+uniform vec2 u_scale;
+uniform vec2 u_center;
+
+void main() {
+    vec2 position = a_position;
+
+    // 1. Centralizar
+    position = position - u_center;
+
+    // 2. Rotação (matriz 2x2)
+    float cosRot = cos(u_rotation);
+    float sinRot = sin(u_rotation);
+    position = vec2(
+        position.x * cosRot - position.y * sinRot,
+        position.x * sinRot + position.y * cosRot
+    );
+
+    // 3. Escala
+    position = position * u_scale;
+
+    // 4. Descentralizar
+    position = position + u_center;
+
+    // 5. Translação
+    position = position + u_translation;
+
+    gl_Position = vec4(position, 0.0, 1.0);
+}</code></pre>
+      </div>
+
+      <div class="theorem-box">
+        <p>
+          <strong>Ordem de Transformações:</strong> A sequência correta é crucial. Rotação e escala
+          ocorrem no espaço local (em torno do centróide), seguidas da translação que move o objeto
+          já transformado para sua posição final. Alterar esta ordem produz resultados diferentes.
+        </p>
+      </div>
+
+      <h4>7.3.3 Fragment Shader</h4>
+
+      <p>
+        Define a cor final de cada pixel através de interpolação automática dos valores varying:
+      </p>
+
+      <div class="code-block">
+        <pre><code>precision mediump float;
+varying vec4 v_color;
+
+void main() {
+    gl_FragColor = v_color;
+}</code></pre>
+      </div>
+
+      <p>
+        Valores varying são interpolados automaticamente entre vértices, permitindo gradientes
+        suaves de cores.
+      </p>
+
+      <h3 id="secao7-4">7.4 Buffers: Enviando Dados à GPU</h3>
+
+      <p>
+        Buffers são áreas de memória na GPU que armazenam dados dos vértices. O processo envolve
+        criar o buffer, vinculá-lo e copiar dados:
+      </p>
+
+      <div class="code-block">
+        <pre><code>// 1. Definir vértices do triângulo
+const vertices = [
+     0.0,  0.5,   // Vértice superior
+    -0.5, -0.5,   // Vértice inferior esquerdo
+     0.5, -0.5    // Vértice inferior direito
+];
+
+// 2. Criar e vincular buffer
+const vertexBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+// 3. Copiar dados para GPU
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);</code></pre>
+      </div>
+
+      <p>
+        <strong>Tipos de uso:</strong>
+      </p>
+
+      <p>
+        <strong>STATIC_DRAW:</strong> Dados definidos uma vez, usados muitas vezes.
+      </p>
+
+      <p>
+        <strong>DYNAMIC_DRAW:</strong> Dados modificados ocasionalmente.
+      </p>
+
+      <p>
+        <strong>STREAM_DRAW:</strong> Dados modificados a cada frame.
+      </p>
+
+      <h4>7.4.1 Conectando Buffers aos Attributes</h4>
+
+      <div class="code-block">
+        <pre><code>// Obter localização do attribute
+const positionLoc = gl.getAttribLocation(program, 'a_position');
+
+// Habilitar attribute
+gl.enableVertexAttribArray(positionLoc);
+
+// Especificar como ler dados do buffer
+gl.vertexAttribPointer(
+    positionLoc,  // Localização
+    2,            // Componentes por vértice (x, y)
+    gl.FLOAT,     // Tipo de dados
+    false,        // Normalizar?
+    0,            // Stride
+    0             // Offset
+);</code></pre>
+      </div>
+
+      <h3 id="secao7-5">7.5 Uniforms: Parâmetros Globais</h3>
+
+      <p>
+        Uniforms são variáveis constantes durante um draw call, usadas para transformações,
+        tempo e outros parâmetros globais:
+      </p>
+
+      <div class="code-block">
+        <pre><code>// Obter localização dos uniforms
+const u_translation = gl.getUniformLocation(program, "u_translation");
+const u_rotation = gl.getUniformLocation(program, "u_rotation");
+const u_scale = gl.getUniformLocation(program, "u_scale");
+
+// Definir valores
+gl.uniform2f(u_translation, 0.5, 0.2);  // vec2
+gl.uniform1f(u_rotation, Math.PI / 4);   // float
+gl.uniform2f(u_scale, 1.5, 1.5);         // vec2</code></pre>
+      </div>
+
+      <h3 id="secao7-6">7.6 Loop de Renderização</h3>
+
+      <p>
+        O loop de renderização limpa o canvas, atualiza uniforms e desenha os objetos a cada frame:
+      </p>
+
+      <div class="code-block">
+        <pre><code>function render() {
+    // 1. Limpar canvas
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // 2. Atualizar uniforms
+    gl.uniform2f(u_translation, x, y);
+
+    // 3. Desenhar
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    // 4. Próximo frame
+    requestAnimationFrame(render);
+}
+
+render();</code></pre>
+      </div>
+
+      <p>
+        <strong>gl.drawArrays(mode, first, count):</strong> Desenha primitivas usando vértices do buffer.
+        O parâmetro mode define o tipo (gl.TRIANGLES, gl.TRIANGLE_FAN, gl.POINTS, etc.).
+      </p>
+
+      <h3 id="secao7-7">7.7 Exemplo Completo: Triângulo Animado</h3>
+
+      <p>
+        Implementação mínima completa de um triângulo rotacionando e se movendo em círculo:
+      </p>
+
+      <div class="code-block">
+        <pre><code>// Setup inicial
+const canvas = document.getElementById('canvas');
+const gl = canvas.getContext('webgl');
+
+// Shaders
+const vsSource = `
+    attribute vec2 a_position;
+    uniform vec2 u_translation;
+    uniform float u_rotation;
+
+    void main() {
+        float c = cos(u_rotation);
+        float s = sin(u_rotation);
+        vec2 pos = vec2(
+            a_position.x * c - a_position.y * s,
+            a_position.x * s + a_position.y * c
+        );
+        pos = pos + u_translation;
+        gl_Position = vec4(pos, 0.0, 1.0);
+    }
+`;
+
+const fsSource = `
+    precision mediump float;
+    void main() {
+        gl_FragColor = vec4(0.2, 0.5, 0.8, 1.0);
+    }
+`;
+
+// Compilar shaders e criar programa
+// ... (código de compilação omitido)
+
+// Dados e buffers
+const vertices = new Float32Array([
+     0.0,  0.5,
+    -0.5, -0.5,
+     0.5, -0.5
+]);
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+// Conectar attributes
+const a_position = gl.getAttribLocation(program, 'a_position');
+gl.enableVertexAttribArray(a_position);
+gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+// Uniforms
+const u_translation = gl.getUniformLocation(program, "u_translation");
+const u_rotation = gl.getUniformLocation(program, "u_rotation");
+
+// Animação
+let angle = 0;
+
+function render() {
+    gl.clearColor(0.1, 0.1, 0.1, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    angle += 0.02;
+    const x = Math.cos(angle) * 0.5;
+    const y = Math.sin(angle) * 0.5;
+
+    gl.uniform2f(u_translation, x, y);
+    gl.uniform1f(u_rotation, angle);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(render);
+}
+
+render();</code></pre>
+      </div>
+
+      <h3 id="secao7-8">7.8 Relação com Álgebra Linear</h3>
+
+      <p>
+        A correspondência direta entre conceitos matemáticos e implementação WebGL demonstra
+        a aplicação prática da álgebra linear:
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+        <thead>
+          <tr style="background: var(--bg-light); border-bottom: 2px solid var(--border-dark);">
+            <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Conceito Matemático</th>
+            <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Implementação WebGL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem;">Vetor em ℝ²</td>
+            <td style="padding: 0.75rem;"><code>attribute vec2 a_position</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem;">Matriz 2×2</td>
+            <td style="padding: 0.75rem;">Rotação/Escala no vertex shader</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem;">Transformação linear</td>
+            <td style="padding: 0.75rem;">Operações no espaço local (centróide)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem;">Transformação afim</td>
+            <td style="padding: 0.75rem;">Translação (não preserva origem)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem;">Composição de transformações</td>
+            <td style="padding: 0.75rem;">Sequência de operações no shader</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem;">Espaço vetorial</td>
+            <td style="padding: 0.75rem;">Sistema de coordenadas NDC</td>
+          </tr>
+          <tr>
+            <td style="padding: 0.75rem;">Produto matriz-vetor</td>
+            <td style="padding: 0.75rem;">Aplicação de transformações</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="example-box">
+
+        <p><strong>Escala com ponto fixo - WebGL (vertex shader):</strong></p>
+        <div class="code-block">
+          <pre><code>position = a_position - u_center;  // T(-cx, -cy)
+position = position * u_scale;      // S(sx, sy)
+position = position + u_center;     // T(cx, cy)</code></pre>
+        </div>
+
+        <p>
+          Correspondência direta entre teoria matemática e código.
+        </p>
+      </div>
+
+      <h3 id="secao7-9">7.9 Aplicação Prática: Sistema Interativo</h3>
+
+      <p>
+        A demonstração abaixo integra todos os conceitos apresentados: buffers, shaders, uniforms,
+        transformações e loop de renderização. O sistema permite adicionar polígonos (triângulo,
+        quadrado, pentágono, hexágono) e aplicar transformações interativas através de controles
+        na barra lateral.
+      </p>
+
+      <p>
+        Cada objeto mantém seu estado de transformação (translação, rotação, escala) e pode ser
+        manipulado independentemente, criando o movimento fluido.
+      </p>
+
+      <div class="demo-box">
+        <div class="iframe-container">
+          <iframe
+            src="./animation2d/index.html"
+            width="720px"
+            height="720px"
+            frameborder="0"
+            title="Animação no Plano"
+            style="border: 1px solid #ddd; border-radius: 4px;">
+          </iframe>
+        </div>
+      </div>
+
     </article>
   </main>
 

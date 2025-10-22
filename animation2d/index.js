@@ -2,47 +2,6 @@ const canvas = document.getElementById('canvas');
 const gl = canvas.getContext('webgl');
 const objectsToDraw = [];
 let angle = 0;
-let numberOfElements = 0;
-
-let isCentering = true;
-
-function toggleCentering() {
-    isCentering = !isCentering;
-}
-
-function toggleSidebar() {
-    var button = document.querySelector(".button");
-    var sidebar = document.querySelector(".sidebar");
-    var sidebarItems = document.querySelectorAll(".sidebar-item");
-    
-    button.classList.toggle("active");
-    sidebar.classList.toggle("move-to-left");
-    sidebarItems.forEach(function(item) {
-        item.classList.toggle("active");
-    });
-}
-
-function addElement(pol) {
-    const colorMatrix = generateColorMatrix(poligons[pol].length/2 + 1);
-    objectsToDraw.push(new DrawableObject(poligons[pol], colorMatrix, gl.TRIANGLE_FAN));
-
-    const root = document.getElementById('elements');
-    root.innerHTML += elementoWebGL(numberOfElements++);
-}
-
-function generateColorMatrix(polNumberVertices) {
-    const matrixColor = [];
-
-    const colorR = Math.random();
-    const colorG = Math.random();
-    const colorB = Math.random();
-
-    for (let i = 0 ; i < polNumberVertices ; i++) {
-        matrixColor.push(...[colorR, colorG, colorB, 1,]);
-    }    
-
-    return matrixColor;
-}
 
 function animation(id){
     const x = document.getElementById('x' + id);
@@ -58,35 +17,6 @@ function animation(id){
         parseFloat(r.value)
     );
 }
-
-function removeElement(id) {
-    document.getElementById(`element-${id}`).remove();
-    const root = document.getElementById('elements');
-    const elements = root.querySelectorAll(':scope > div');
-    elements.forEach((e, i) => {
-        e.id = `element-${i}`;
-        e.querySelector('button').onclick = () => removeElement(i);
-        const elementsInput = root.querySelectorAll(`#element-${i} input`);
-        elementsInput.forEach(input => {
-            input.id = input.id.substring(0,1) + i;
-            input.onchange = () => animation(i);
-            input.onkeypress = () => animation(i);
-        });
-    });
-    
-    objectsToDraw.splice(id, 1)
-    numberOfElements--;
-}
-
-document.querySelector(".button").addEventListener("click", function() {
-    toggleSidebar();
-});
-
-document.addEventListener("keyup", function(e) {
-    if (e.key === "Escape" || e.code === "Escape") {
-        toggleSidebar();
-    }
-});
 
 if (!gl) {
     console.error('WebGL não está disponível.');
@@ -167,7 +97,7 @@ function initWebGL() {
         
         void main() {
             vec2 position;
-            position = isCenter ? a_position - u_center : position = a_position;
+            position = a_position - u_center;
         
             float cosRot = cos(u_rotation);
             float sinRot = sin(u_rotation);
@@ -178,9 +108,7 @@ function initWebGL() {
         
             position = position * u_scale;        
         
-            if (isCenter) {
-                position = position + u_center;
-            }
+            position = position + u_center;
         
             position = position + u_translation;
         
@@ -234,9 +162,6 @@ function drawObject(object) {
 
     const u_scale = gl.getUniformLocation(shaderProgram, "u_scale");
     gl.uniform2f(u_scale, object.scale.x, object.scale.y);
-
-    const isCenter = gl.getUniformLocation(shaderProgram, "isCenter");
-    gl.uniform1f(isCenter, isCentering);
 
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
