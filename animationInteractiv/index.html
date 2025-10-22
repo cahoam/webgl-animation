@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div class="nav-right visible-xs">
+        <div class="button" id="btn">
+            <div class="bar top"></div>
+            <div class="bar middle"></div>
+            <div class="bar bottom"></div>
+        </div>
+    </div>
+
+    <main>
+        <nav>
+            <canvas id="canvas"></canvas>
+        </nav>      
+    </main>
+      
+    <div class="sidebar">
+        <div class="sidebar-list">
+            <div>
+                <input checked type="checkbox" onchange="toggleCentering()">
+                Calcular centróide
+            </div>
+            <div class="listButtons">
+                <button onclick="addElement('tri')">
+                    <img src="../assets/icons/tri.svg" width="50px" height="50px">
+                </button>
+                <button onclick="addElement('sqr')">
+                    <img src="../assets/icons/sqr.svg" width="50px" height="50px">
+                </button>
+                <button onclick="addElement('pen')">
+                    <img src="../assets/icons/pen.svg" width="50px" height="50px">
+                </button>
+                <button onclick="addElement('hex')">
+                    <img src="../assets/icons/hex.svg" width="50px" height="50px">
+                </button>
+            </div>
+            <div class="elements" id="elements">
+            </div>
+            <button class="addElement" onclick="addElement()">
+                Adicionar elemento
+            </button>
+        </div>
+    </div>
+    <script src="./const.js"></script>
+    <script src="./index.js"></script>
+</body>
+</html>
