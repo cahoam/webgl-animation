@@ -1057,6 +1057,35 @@
         de 2x e redução vertical pela metade.
       </p>
 
+      <h4>Demonstração: Escala a partir da Origem vs. Centróide</h4>
+
+      <p>
+        Um aspecto importante da escala é o <strong>ponto fixo</strong> da transformação.
+        A transformação linear de escala S(α, β) sempre mantém a origem (0,0) fixa.
+        Porém, na prática, frequentemente desejamos escalar objetos mantendo seu centro
+        geométrico fixo. A demonstração abaixo ilustra essa diferença fundamental:
+      </p>
+
+      <div class="demo-box">
+        <div class="iframe-container">
+          <iframe
+            src="./escala_comparacao.html"
+            width="100%"
+            height="450px"
+            frameborder="0"
+            title="Comparação de Escala: Origem vs Centróide"
+            style="border: 1px solid #ddd; border-radius: 4px;">
+          </iframe>
+        </div>
+
+        <p class="demo-note">
+          <strong>Observação importante:</strong> À esquerda, a escala linear pura S(α, α)
+          desloca o triângulo conforme ele cresce/diminui, pois apenas a origem permanece fixa.
+          À direita, a escala com centróide fixo combina translações com a escala linear,
+          resultando em uma transformação afim que preserva a posição visual do objeto.
+        </p>
+      </div>
+
       <h3 id="secao3-3">3.3 Cisalhamento</h3>
 
       <p>
@@ -1105,9 +1134,34 @@
         R(270°) = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$$
       </div>
 
+      <h4>Demonstração: Rotação a partir da Origem vs. Centróide</h4>
+
       <p>
-        A matriz de rotação possui determinante 1 e é ortogonal: R<sup>T</sup> = R<sup>-1</sup>.
+        Assim como na escala, o <strong>ponto fixo</strong> da rotação é crucial.
+        A transformação linear de rotação R(θ) sempre mantém a origem (0,0) fixa.
+        Para rotacionar objetos em torno de seu próprio centro, é necessário combinar
+        translações com a rotação. A demonstração abaixo ilustra essa diferença:
       </p>
+
+      <div class="demo-box">
+        <div class="iframe-container">
+          <iframe
+            src="./rotacao_comparacao.html"
+            width="100%"
+            height="450px"
+            frameborder="0"
+            title="Comparação de Rotação: Origem vs Centróide"
+            style="border: 1px solid #ddd; border-radius: 4px;">
+          </iframe>
+        </div>
+
+        <p class="demo-note">
+          <strong>Observação importante:</strong> À esquerda, a rotação linear pura R(θ)
+          faz o triângulo orbitar em torno da origem, mudando sua posição no plano.
+          À direita, a rotação com centróide fixo mantém o triângulo girando "no lugar",
+          em torno de seu próprio centro geométrico. Esta é a rotação esperada.
+        </p>
+      </div>
 
       <div class="theorem-box">
         <p>
@@ -1608,8 +1662,6 @@
         \end{bmatrix}$$
       </div>
 
-      <!-- TODO: ADICIONAR IMAGEM - Tetraedro sendo escalado com vértice D fixo destacado -->
-
       <h3 id="secao6-3">6.3 Rotação com Ponto Fixo em 3D</h3>
 
       <p>
@@ -1707,6 +1759,32 @@
         O tetraedro foi rotacionado 90° em torno do eixo Y. O vértice D permaneceu fixo em (1, 0, 0),
         enquanto os demais vértices descreveram arcos de 90° ao redor deste ponto.
       </p>
+
+      <h4>Demonstração 3D: Rotação a partir da Origem vs. Centróide</h4>
+
+      <p>
+        No espaço tridimensional, a rotação pode ocorrer em torno de diferentes eixos (X, Y ou Z).
+        A demonstração abaixo mostra um cubo rotacionando em torno do eixo Y de duas formas:
+      </p>
+
+      <div class="demo-box">
+        <div class="iframe-container">
+          <iframe
+            src="./rotacao_3d_comparacao.html"
+            width="100%"
+            height="450px"
+            frameborder="0"
+            title="Comparação de Rotação 3D: Origem vs Centróide"
+            style="border: 1px solid #ddd; border-radius: 4px;">
+          </iframe>
+        </div>
+
+        <p class="demo-note">
+          <strong>Observação importante:</strong> À esquerda, o cubo orbita em torno da origem (0,0,0),
+          descrevendo uma trajetória circular no espaço. À direita, o cubo gira em torno de seu próprio
+          centro geométrico, permanecendo na mesma posição espacial.
+        </p>
+      </div>
 
       <h3 id="secao6-4">6.4 Centróide de Poliedros</h3>
 
