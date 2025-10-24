@@ -1,0 +1,295 @@
+const vsSource = `
+    attribute vec2 aPosition;
+    attribute vec3 aColor;
+    uniform vec2 uScale;
+    uniform vec2 uCentroid;
+    uniform bool uUseCentroid;
+    varying vec3 vColor;
+
+    void main(void) {
+    vec2 pos = aPosition;
+
+    if (uUseCentroid) {
+        pos = pos - uCentroid;
+        pos = pos * uScale;
+        pos = pos + uCentroid;
+    } else {
+        pos = pos * uScale;
+    }
+
+    gl_Position = vec4(pos, 0.0, 1.0);
+        vColor = aColor;
+    }
+`;
+
+const fsSource = `
+    precision mediump float;
+    varying vec3 vColor;
+
+    void main(void) {
+        gl_FragColor = vec4(vColor, 1.0);
+    }
+`;
+
+const vsGrid = `
+    attribute vec2 aPosition;
+    uniform vec3 uColor;
+    varying vec3 vColor;
+
+    void main(void) {
+    gl_Position = vec4(aPosition, 0.0, 1.0);
+        vColor = uColor;
+    }
+`;
+
+const fsGrid = `
+    precision mediump float;
+    varying vec3 vColor;
+
+    void main(void) {
+        gl_FragColor = vec4(vColor, 0.2);
+    }
+`;
+
+let glOrigin, glCentroid;
+let programOrigin, programCentroid, gridProgramOrigin, gridProgramCentroid;
+let buffersOrigin, buffersCentroid, gridBuffers;
+let scale = 1.0;
+let scaleDirection = 1;
+let animationSpeed = 0.01;
+
+const triangleVertices = [
+    0.3,  0.5,
+    0.0,  0.0,
+    0.6,  0.0,
+];
+
+const centroid = [
+    (triangleVertices[0] + triangleVertices[2] + triangleVertices[4]) / 3,
+    (triangleVertices[1] + triangleVertices[3] + triangleVertices[5]) / 3
+];
+
+const colors = [
+    0.4, 0.45, 0.5,
+    0.5, 0.55, 0.6,
+    0.6, 0.65, 0.7,
+];
+
+const gridLines = [];
+for (let i = -1; i <= 1; i += 0.2) {
+    gridLines.push(i, -1, i, 1);
+    gridLines.push(-1, i, 1, i);
+}
+
+const axesLines = [
+    -1, 0, 1, 0,
+    0, -1, 0, 1,
+];
+
+function initWebGL(canvas) {
+    const gl = canvas.getContext('webgl', { antialias: true });
+    if (!gl) {
+    alert('WebGL não está disponível.');
+    return null;
+    }
+    return gl;
+}
+
+function initShaderProgram(gl, vsSource, fsSource) {
+    const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    const shaderProgram = gl.createProgram();
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    console.error('Shader program failed: ' + gl.getProgramInfoLog(shaderProgram));
+    return null;
+    }
+    return shaderProgram;
+}
+
+function loadShader(gl, type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error('Shader compile error: ' + gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+    }
+    return shader;
+}
+
+function initBuffers(gl) {
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices), gl.STATIC_DRAW);
+
+    const colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
+    return { position: positionBuffer, color: colorBuffer };
+}
+
+function initGridBuffers(gl) {
+    const gridBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(gridLines), gl.STATIC_DRAW);
+
+    const axesBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, axesBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(axesLines), gl.STATIC_DRAW);
+
+    return { grid: gridBuffer, axes: axesBuffer };
+}
+
+function drawGrid(gl, gridProgram, gridBuffers) {
+    gl.useProgram(gridProgram.program);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBuffers.grid);
+    gl.vertexAttribPointer(gridProgram.attribLocations.position, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(gridProgram.attribLocations.position);
+    gl.uniform3f(gridProgram.uniformLocations.color, 0.8, 0.8, 0.8);
+    gl.drawArrays(gl.LINES, 0, gridLines.length / 2);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBuffers.axes);
+    gl.vertexAttribPointer(gridProgram.attribLocations.position, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform3f(gridProgram.uniformLocations.color, 0.5, 0.5, 0.5);
+    gl.drawArrays(gl.LINES, 0, 4);
+}
+
+function drawCentroidMarker(gl, gridProgram, showCentroid) {
+    if (!showCentroid) return;
+
+    const markerSize = 0.05;
+    const centroidMarker = [
+    centroid[0] - markerSize, centroid[1], centroid[0] + markerSize, centroid[1],
+    centroid[0], centroid[1] - markerSize, centroid[0], centroid[1] + markerSize,
+    ];
+
+    const markerBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, markerBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(centroidMarker), gl.STATIC_DRAW);
+
+    gl.vertexAttribPointer(gridProgram.attribLocations.position, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform3f(gridProgram.uniformLocations.color, 0.98, 0.74, 0.14);
+    gl.drawArrays(gl.LINES, 0, 4);
+}
+
+function drawScene(gl, programInfo, buffers, gridProgram, gridBuffers, useCentroid, currentScale) {
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    drawGrid(gl, gridProgram, gridBuffers);
+    drawCentroidMarker(gl, gridProgram, useCentroid);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+    gl.vertexAttribPointer(programInfo.attribLocations.position, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(programInfo.attribLocations.position);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+    gl.vertexAttribPointer(programInfo.attribLocations.color, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(programInfo.attribLocations.color);
+
+    gl.useProgram(programInfo.program);
+    gl.uniform2f(programInfo.uniformLocations.scale, currentScale, currentScale);
+    gl.uniform2f(programInfo.uniformLocations.centroid, centroid[0], centroid[1]);
+    gl.uniform1i(programInfo.uniformLocations.useCentroid, useCentroid ? 1 : 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+function animate() {
+    scale += scaleDirection * animationSpeed;
+
+    if (scale >= 2.8) {
+    scale = 2.8;
+    scaleDirection = -1;
+    } else if (scale <= 0.5) {
+    scale = 0.5;
+    scaleDirection = 1;
+    }
+
+    document.getElementById('scaleOrigin').textContent = scale.toFixed(2);
+    document.getElementById('scaleCentroid').textContent = scale.toFixed(2);
+
+    drawScene(glOrigin, programOrigin, buffersOrigin, gridProgramOrigin, gridBuffers, false, scale);
+    drawScene(glCentroid, programCentroid, buffersCentroid, gridProgramCentroid, gridBuffers, true, scale);
+
+    requestAnimationFrame(animate);
+}
+
+function main() {
+    const canvasOrigin = document.getElementById('canvasOrigin');
+    glOrigin = initWebGL(canvasOrigin);
+    if (!glOrigin) return;
+
+    const shaderProgramOrigin = initShaderProgram(glOrigin, vsSource, fsSource);
+    const gridShaderOrigin = initShaderProgram(glOrigin, vsGrid, fsGrid);
+
+    programOrigin = {
+    program: shaderProgramOrigin,
+    attribLocations: {
+        position: glOrigin.getAttribLocation(shaderProgramOrigin, 'aPosition'),
+        color: glOrigin.getAttribLocation(shaderProgramOrigin, 'aColor'),
+    },
+    uniformLocations: {
+        scale: glOrigin.getUniformLocation(shaderProgramOrigin, 'uScale'),
+        centroid: glOrigin.getUniformLocation(shaderProgramOrigin, 'uCentroid'),
+        useCentroid: glOrigin.getUniformLocation(shaderProgramOrigin, 'uUseCentroid'),
+    },
+    };
+
+    gridProgramOrigin = {
+    program: gridShaderOrigin,
+    attribLocations: {
+        position: glOrigin.getAttribLocation(gridShaderOrigin, 'aPosition'),
+    },
+    uniformLocations: {
+        color: glOrigin.getUniformLocation(gridShaderOrigin, 'uColor'),
+    },
+    };
+
+    buffersOrigin = initBuffers(glOrigin);
+    gridBuffers = initGridBuffers(glOrigin);
+
+    const canvasCentroid = document.getElementById('canvasCentroid');
+    glCentroid = initWebGL(canvasCentroid);
+    if (!glCentroid) return;
+
+    const shaderProgramCentroid = initShaderProgram(glCentroid, vsSource, fsSource);
+    const gridShaderCentroid = initShaderProgram(glCentroid, vsGrid, fsGrid);
+
+    programCentroid = {
+    program: shaderProgramCentroid,
+    attribLocations: {
+        position: glCentroid.getAttribLocation(shaderProgramCentroid, 'aPosition'),
+        color: glCentroid.getAttribLocation(shaderProgramCentroid, 'aColor'),
+    },
+    uniformLocations: {
+        scale: glCentroid.getUniformLocation(shaderProgramCentroid, 'uScale'),
+        centroid: glCentroid.getUniformLocation(shaderProgramCentroid, 'uCentroid'),
+        useCentroid: glCentroid.getUniformLocation(shaderProgramCentroid, 'uUseCentroid'),
+    },
+    };
+
+    gridProgramCentroid = {
+    program: gridShaderCentroid,
+    attribLocations: {
+        position: glCentroid.getAttribLocation(gridShaderCentroid, 'aPosition'),
+    },
+    uniformLocations: {
+        color: glCentroid.getUniformLocation(gridShaderCentroid, 'uColor'),
+    },
+    };
+
+    buffersCentroid = initBuffers(glCentroid);
+
+    animate();
+}
+
+window.onload = main;
