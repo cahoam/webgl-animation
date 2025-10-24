@@ -1,0 +1,8 @@
+body {
+    margin: 0;
+}
+
+#world {
+    width: 700px;
+    height: 700px;
+}
