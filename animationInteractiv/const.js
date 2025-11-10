@@ -24,7 +24,7 @@ const elementoWebGL = (id) => `
                 <input class="form-field" type="number" value="0" min="-1" step="0.01" id="k${id}" onkeypress="animation(${id})" onchange="animation(${id})">
             </div>    
             <button class="delete-element" onClick="removeElement(${id})">
-                <img src="./assets/icon-delete.svg" height="20"/>
+                <img src="../assets/icon-delete.svg" height="20"/>
             </button>
         </div>
     </div>

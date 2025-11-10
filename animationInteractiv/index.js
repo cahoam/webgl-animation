@@ -164,11 +164,21 @@ function initWebGL() {
         varying vec4 v_color;
         precision mediump float;
         uniform bool isCenter;
-        
+
         void main() {
-            vec2 position;
-            position = isCenter ? a_position - u_center : position = a_position;
-        
+            vec2 position = a_position;
+            vec2 pivot;
+
+            if (isCenter) {
+                pivot = u_center + u_translation;
+            } else {
+                pivot = vec2(0.0, 0.0);
+            }
+
+            position = position + u_translation;
+
+            position = position - pivot;
+
             float cosRot = cos(u_rotation);
             float sinRot = sin(u_rotation);
             position = vec2(
@@ -177,13 +187,9 @@ function initWebGL() {
             );
         
             position = position * u_scale;        
-        
-            if (isCenter) {
-                position = position + u_center;
-            }
-        
-            position = position + u_translation;
-        
+
+            position = position + pivot;
+
             gl_Position = vec4(position, 0.0, 1.0);
             v_color = a_color;
         }
@@ -255,21 +261,6 @@ function render() {
 
     runAnimation();
 
-    objectsToDraw[0].setTranslation(Math.sin(angle)/7, Math.max(0, Math.cos(angle)/7));
-    objectsToDraw[1].setTranslation(Math.sin(angle + Math.PI)/14, Math.max(0, Math.cos(angle + Math.PI)/7));
-    objectsToDraw[2].setTranslation(0,  Math.cos((angle * 2) + 0.2)/15);
-    objectsToDraw[3].setTranslation(0,  Math.cos(angle * 2)/12);
-    objectsToDraw[4].setTranslation(-Math.cos(angle + Math.PI)/8,   Math.cos((angle * 2) + 0.2)/15);
-    objectsToDraw[4].setRotation(-Math.cos(angle + Math.PI) * (Math.PI / 8))
-
-    if (Math.cos(angle) > 0) {
-        objectsToDraw[0].setRotation(Math.cos((angle * 2) - (Math.PI / 2)) * Math.PI/4);
-        objectsToDraw[1].setRotation(0);
-    } else {
-        objectsToDraw[0].setRotation(0);
-        objectsToDraw[1].setRotation(Math.cos((angle * 2) - (Math.PI / 2)) * Math.PI/4);
-
-    }
     angle += 0.02;
 
     objectsToDraw.forEach(drawObject);
@@ -299,60 +290,7 @@ function calculateCenter(vertices) {
     return { x: sumX / (vertices.length / 2), y: sumY / (vertices.length / 2) };
 }
 
-const firstFeet = [
-    -0.125,  -.65,
-    -0.125, -0.5,
-    .125, -0.5,
-    .125,  -.65
-];
-
-const secondFeet = [
-    -0.125, -0.65,
-    -0.125, -.5,
-    .125, -.5,
-    .125, -0.65
-];
-
-const tronco = [
-    0.125, 0,
-    0.125, -.25,
-    -0.125, -.25,
-    -0.125, 0
-]
-
-const cabeca = [
-    0.2, .45,
-    0.2, .05,
-    -0.2, .05,
-    -0.2, .45
-]
-
-const hand = [
-    0.05, -.25,
-    0.05, -.15,
-    -0.05, -.15,
-    -0.05, -.25
-]
-
-const white = [
-    1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 1.0, 1.0
-];
-
-const brown = [
-    0.7, 0.5, 0.25, 1.0,
-    0.7, 0.5, 0.25, 1.0,
-    0.7, 0.5, 0.25, 1.0,
-    0.7, 0.5, 0.25, 1.0,
-];
 
 
 const shaderProgram = initWebGL();
-objectsToDraw.push(new DrawableObject(firstFeet, brown, gl.TRIANGLE_FAN));
-objectsToDraw.push(new DrawableObject(secondFeet, brown, gl.TRIANGLE_FAN));
-objectsToDraw.push(new DrawableObject(tronco, white, gl.TRIANGLE_FAN));
-objectsToDraw.push(new DrawableObject(cabeca, brown, gl.TRIANGLE_FAN));
-objectsToDraw.push(new DrawableObject(hand, brown, gl.TRIANGLE_FAN));
 render();
