@@ -93,7 +93,6 @@ function initWebGL() {
         uniform vec2 u_center;
         varying vec4 v_color;
         precision mediump float;
-        uniform bool isCenter;
         
         void main() {
             vec2 position;
