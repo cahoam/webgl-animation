@@ -42,6 +42,7 @@ const elementoWebGL = (id) => `
                     onchange="updateCustomCode(${id})"
                     rows="4"
                 ></textarea>
+                <div class="code-error" id="codeError${id}" style="display: none;"></div>
                 <div class="code-hint">
                     <strong>Variáveis:</strong> <code>object</code>, <code>angle</code><br>
                     <strong>Métodos:</strong> <code>setTranslation(x, y)</code>, <code>setRotation(r)</code>, <code>setScale(x, y)</code>

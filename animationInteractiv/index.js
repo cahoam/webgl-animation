@@ -61,8 +61,20 @@ function animation(id){
 
 function updateCustomCode(id) {
     const codeTextarea = document.getElementById('customCode' + id);
+    const errorDiv = document.getElementById('codeError' + id);
+
     if (codeTextarea && objectsToDraw[id]) {
-        objectsToDraw[id].setCustomCode(codeTextarea.value);
+        const result = objectsToDraw[id].setCustomCode(codeTextarea.value);
+
+        if (result.success) {
+            codeTextarea.classList.remove('has-error');
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+        } else {
+            codeTextarea.classList.add('has-error');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Erro: ' + result.error;
+        }
     }
 }
 
@@ -102,6 +114,11 @@ function removeElement(id) {
         if (textarea) {
             textarea.id = 'customCode' + i;
             textarea.onchange = () => updateCustomCode(i);
+        }
+
+        const errorDiv = e.querySelector('.code-error');
+        if (errorDiv) {
+            errorDiv.id = 'codeError' + i;
         }
 
         const codeContent = e.querySelector('.custom-code-content');
@@ -147,6 +164,8 @@ class DrawableObject {
         this.animation = animation;
         this.customCode = customCode;
         this.customCodeFunction = null;
+        this.lastCompileError = null;
+        this.lastExecutionError = null;
         this.calculateCenter(this.vertices);
     }
 
@@ -174,11 +193,22 @@ class DrawableObject {
 
     setCustomCode(code) {
         this.customCode = code;
+
+        if (!code || code.trim() === '') {
+            this.customCodeFunction = null;
+            this.lastCompileError = null;
+            return { success: true };
+        }
+
         try {
             this.customCodeFunction = new Function('object', 'angle', code);
+            this.lastCompileError = null;
+            return { success: true };
         } catch (e) {
             console.error('Erro ao compilar código customizado:', e);
             this.customCodeFunction = null;
+            this.lastCompileError = e.message;
+            return { success: false, error: e.message };
         }
     }
 
@@ -186,8 +216,12 @@ class DrawableObject {
         if (this.customCodeFunction) {
             try {
                 this.customCodeFunction(this, angle);
+                this.lastExecutionError = null;
             } catch (e) {
-                console.error('Erro ao executar código customizado:', e);
+                if (this.lastExecutionError !== e.message) {
+                    console.error('Erro ao executar código customizado:', e);
+                    this.lastExecutionError = e.message;
+                }
             }
         }
     }
