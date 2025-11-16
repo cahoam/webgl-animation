@@ -27,6 +27,27 @@ const elementoWebGL = (id) => `
                 <img src="../assets/icon-delete.svg" height="20"/>
             </button>
         </div>
+        <div class="custom-code-section">
+            <div class="custom-code-header" onclick="toggleCustomCode(${id})">
+                <span class="custom-code-title">
+                    <span class="toggle-icon" id="toggleIcon${id}">▶</span>
+                    Anime com Código Customizado (JS)
+                </span>
+            </div>
+            <div class="custom-code-content" id="customCodeContent${id}" style="display: none;">
+                <textarea
+                    id="customCode${id}"
+                    class="custom-code-textarea"
+                    placeholder="Ex: object.setRotation(Math.sin(angle) * 0.5);"
+                    onchange="updateCustomCode(${id})"
+                    rows="4"
+                ></textarea>
+                <div class="code-hint">
+                    <strong>Variáveis:</strong> <code>object</code>, <code>angle</code><br>
+                    <strong>Métodos:</strong> <code>setTranslation(x, y)</code>, <code>setRotation(r)</code>, <code>setScale(x, y)</code>
+                </div>
+            </div>
+        </div>
     </div>
 `;
 

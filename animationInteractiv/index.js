@@ -59,6 +59,31 @@ function animation(id){
     );
 }
 
+function updateCustomCode(id) {
+    const codeTextarea = document.getElementById('customCode' + id);
+    if (codeTextarea && objectsToDraw[id]) {
+        objectsToDraw[id].setCustomCode(codeTextarea.value);
+    }
+}
+
+function toggleCustomCode(id) {
+    const content = document.getElementById('customCodeContent' + id);
+    const icon = document.getElementById('toggleIcon' + id);
+    const header = content.parentElement.querySelector('.custom-code-header');
+
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.textContent = '▼';
+        icon.classList.add('expanded');
+        header.classList.add('active');
+    } else {
+        content.style.display = 'none';
+        icon.textContent = '▶';
+        icon.classList.remove('expanded');
+        header.classList.remove('active');
+    }
+}
+
 function removeElement(id) {
     document.getElementById(`element-${id}`).remove();
     const root = document.getElementById('elements');
@@ -72,9 +97,28 @@ function removeElement(id) {
             input.onchange = () => animation(i);
             input.onkeypress = () => animation(i);
         });
+
+        const textarea = e.querySelector('textarea');
+        if (textarea) {
+            textarea.id = 'customCode' + i;
+            textarea.onchange = () => updateCustomCode(i);
+        }
+
+        const codeContent = e.querySelector('.custom-code-content');
+        if (codeContent) {
+            codeContent.id = 'customCodeContent' + i;
+        }
+        const toggleIcon = e.querySelector('.toggle-icon');
+        if (toggleIcon) {
+            toggleIcon.id = 'toggleIcon' + i;
+        }
+        const header = e.querySelector('.custom-code-header');
+        if (header) {
+            header.onclick = () => toggleCustomCode(i);
+        }
     });
-    
-    objectsToDraw.splice(id, 1)
+
+    objectsToDraw.splice(id, 1);
     numberOfElements--;
 }
 
@@ -93,7 +137,7 @@ if (!gl) {
 }
 
 class DrawableObject {
-    constructor(vertices, colors, drawType, translation = {x: 0, y: 0}, rotation = 0, scale = {x: 1, y: 1}, animation = {x: 0, y: 0, ex: 0, ey: 0, r: 0}) {
+    constructor(vertices, colors, drawType, translation = {x: 0, y: 0}, rotation = 0, scale = {x: 1, y: 1}, animation = {x: 0, y: 0, ex: 0, ey: 0, r: 0}, customCode = '') {
         this.vertices = vertices;
         this.colors = colors;
         this.drawType = drawType;
@@ -101,6 +145,8 @@ class DrawableObject {
         this.rotation = rotation;
         this.scale = scale;
         this.animation = animation;
+        this.customCode = customCode;
+        this.customCodeFunction = null;
         this.calculateCenter(this.vertices);
     }
 
@@ -124,6 +170,26 @@ class DrawableObject {
         this.animation.ex = ex;
         this.animation.ey = ey;
         this.animation.r = r;
+    }
+
+    setCustomCode(code) {
+        this.customCode = code;
+        try {
+            this.customCodeFunction = new Function('object', 'angle', code);
+        } catch (e) {
+            console.error('Erro ao compilar código customizado:', e);
+            this.customCodeFunction = null;
+        }
+    }
+
+    executeCustomCode(angle) {
+        if (this.customCodeFunction) {
+            try {
+                this.customCodeFunction(this, angle);
+            } catch (e) {
+                console.error('Erro ao executar código customizado:', e);
+            }
+        }
     }
 
     calculateCenter() {
@@ -260,6 +326,10 @@ function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     runAnimation();
+
+    objectsToDraw.forEach(object => {
+        object.executeCustomCode(angle);
+    });
 
     angle += 0.02;
 

@@ -254,3 +254,102 @@ div.listButtons button {
     border-radius: 5px;
     width: 78px;
 }
+
+.custom-code-section {
+    margin-top: 10px;
+    margin-right: 5px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+.custom-code-header {
+    padding: 10px 12px;
+    background-color: #e8e8e8;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #ddd;
+}
+
+.custom-code-header:hover {
+    background-color: #d8d8d8;
+}
+
+.custom-code-header.active {
+    background-color: #dae8f5;
+    border-bottom-color: #0d99ff;
+}
+
+.custom-code-title {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.toggle-icon {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 10px;
+    color: #666;
+    transition: transform 0.3s ease;
+    width: 12px;
+}
+
+.toggle-icon.expanded {
+    transform: rotate(0deg);
+}
+
+.custom-code-content {
+    padding: 10px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+.custom-code-textarea {
+    width: calc(100% - 15px);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.4;
+}
+
+.custom-code-textarea:focus {
+    outline: none;
+    border-color: #0d99ff;
+    background-color: #fafafa;
+}
+
+.code-hint {
+    margin-top: 5px;
+    font-size: 10px;
+    color: #666;
+    line-height: 1.3;
+}
+
+.code-hint code {
+    background-color: #e8e8e8;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #c7254e;
+}
