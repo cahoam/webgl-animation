@@ -3,27 +3,31 @@ const elementoWebGL = (id) => `
         <div class="form-line">
             <div class="form-group">
                 <span>X</span>
-                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="x${id}" onkeypress="animation(${id})" onchange="animation(${id})">
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="x${id}"
+                       title="Translação no eixo X"
+                       onkeypress="animation(${id})" onchange="animation(${id})">
             </div>
             <div class="form-group">
                 <span>Y</span>
-                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="y${id}" onkeypress="animation(${id})" onchange="animation(${id})">
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="y${id}"
+                       title="Translação no eixo Y"
+                       onkeypress="animation(${id})" onchange="animation(${id})">
             </div>    
             <div class="form-group">
                 <span>E</span>
-                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="e${id}" onkeypress="animation(${id})" onchange="animation(${id})">
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="e${id}"
+                       title="Escala"
+                       onkeypress="animation(${id})" onchange="animation(${id})">
             </div>    
         </div>
         <div class="form-line">
             <div class="form-group">
                 <span>R</span>
-                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="r${id}" onkeypress="animation(${id})" onchange="animation(${id})">
+                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="r${id}"
+                       title="Rotação"
+                       onkeypress="animation(${id})" onchange="animation(${id})">
             </div>
-            <div class="form-group">
-                <span>K</span>
-                <input class="form-field" type="number" value="0" min="-1" step="0.01" id="k${id}" onkeypress="animation(${id})" onchange="animation(${id})">
-            </div>    
-            <button class="delete-element" onClick="removeElement(${id})">
+            <button class="delete-element" onClick="removeElement(${id})" title="Remover objeto">
                 <img src="../assets/icon-delete.svg" height="20"/>
             </button>
         </div>
