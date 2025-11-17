@@ -820,6 +820,26 @@
         <span class="toc-item-number">8.7</span>
         Animação Coelho
       </a>
+      <a href="#secao9" class="toc-item" data-section="9">
+        <span class="toc-item-number">9</span>
+        Sistema de Animação Interativa
+      </a>
+      <a href="#secao9-1" class="toc-item toc-subsection" data-section="9.1">
+        <span class="toc-item-number">9.1</span>
+        Arquitetura do Sistema
+      </a>
+      <a href="#secao9-2" class="toc-item toc-subsection" data-section="9.2">
+        <span class="toc-item-number">9.2</span>
+        Gerenciamento de Estado
+      </a>
+      <a href="#secao9-3" class="toc-item toc-subsection" data-section="9.3">
+        <span class="toc-item-number">9.3</span>
+        Animação Procedural via Código
+      </a>
+      <a href="#secao9-4" class="toc-item toc-subsection" data-section="9.4">
+        <span class="toc-item-number">9.4</span>
+        Aplicação Prática Interativa
+      </a>
     </nav>
   </aside>
 
@@ -2664,6 +2684,178 @@ void main() {
           <li><strong>Hierarquia simples:</strong> Transformações propagam de pais para filhos (corpo influencia patas)</li>
         </ul>
       </div>
+    </article>
+
+    <article id="secao9">
+      <h2>9. Sistema de Animação Interativa</h2>
+
+      <p>
+        Esta seção complementa o estudo apresentando um sistema que permite manipular
+        transformações, combinando os conceitos de álgebra linear com programação.
+      </p>
+
+      <h3 id="secao9-1">9.1 Arquitetura do Sistema</h3>
+
+      <p>
+        O sistema implementa uma arquitetura composta por três componentes
+        principais que operam em conjunto no loop de renderização WebGL:
+      </p>
+
+      <div class="example-box">
+        <p><strong>Componentes do Sistema:</strong></p>
+        <ul>
+          <li><strong>Gerenciador de Objetos (DrawableObject):</strong> Encapsula vértices, cores e estado de transformação de cada polígono</li>
+          <li><strong>Interface de Controle:</strong> Permite adicionar objetos e configurar parâmetros de transformação (X, Y, E, R)</li>
+          <li><strong>Motor de Animação:</strong> Aplica transformações incrementais a cada frame e executa código customizado</li>
+        </ul>
+      </div>
+
+      <p>
+        Diferente das demonstrações anteriores, onde as transformações eram pré-programadas e específicas
+        para cada exemplo, este oferece controle sobre cada objeto renderizado.
+        O usuário define incrementos de translação (X, Y), escala (E) e rotação (R) que são aplicados
+        continuamente no loop de animação.
+      </p>
+
+      <div class="code-block">
+        <pre><code>class DrawableObject {
+  constructor(vertices, colors, drawType) {
+    this.vertices = vertices;
+    this.colors = colors;
+    this.translation = {x: 0, y: 0};
+    this.rotation = 0;
+    this.scale = {x: 1, y: 1};
+    this.animation = {x: 0, y: 0, ex: 0, ey: 0, r: 0};
+    this.customCodeFunction = null;
+    this.calculateCenter(this.vertices);
+  }
+}</code></pre>
+      </div>
+
+      <p>
+        A classe armazena tanto o estado atual da transformação (<code>translation</code>, <code>rotation</code>,
+        <code>scale</code>) quanto os incrementos (<code>animation</code>) aplicados por frame. O centróide
+        calculado em <code>this.center</code>.
+      </p>
+
+      <h3 id="secao9-2">9.2 Gerenciamento de Estado</h3>
+
+      <p>
+        O sistema mantém um array global <code>objectsToDraw[]</code> que armazena todos os objetos ativos.
+        A cada chamada de <code>requestAnimationFrame()</code>, a função <code>runAnimation()</code> itera
+        sobre os objetos e atualiza seu estado de transformação:
+      </p>
+
+      <div class="code-block">
+        <pre><code>function runAnimation() {
+  for(let object of objectsToDraw) {
+    let currentX = object.translation.x + object.animation.x;
+    let currentY = object.translation.y + object.animation.y;
+    let currentEX = object.scale.x + object.animation.ex;
+    let currentEY = object.scale.y + object.animation.ey;
+    let currentR = object.rotation + object.animation.r;
+
+    object.setTranslation(currentX, currentY);
+    object.setScale(currentEX, currentEY);
+    object.setRotation(currentR);
+  }
+}</code></pre>
+      </div>
+
+      <p>
+        Esta abordagem implementa <strong>animação procedural</strong>: em vez de definir
+        posições absolutas, o sistema soma incrementos ao estado anterior, para uma sequência
+        de frames \(t = 0, 1, 2, \ldots\), a translação no eixo X evolui como:
+      </p>
+
+      <div class="theorem-box">
+        <p>
+          <strong>Composição de Transformações no Vertex Shader:</strong> O vertex shader aplica as
+          transformações na ordem pivot → rotação → escala → translação final. Quando o modo de centróide
+          está ativo (<code>isCenter = true</code>), o pivô é ajustado para <code>u_center + u_translation</code>,
+          garantindo que rotação e escala ocorram em torno do centro transladado do objeto.
+        </p>
+      </div>
+
+      <h3 id="secao9-3">9.3 Animação Procedural via Código</h3>
+
+      <p>
+        Além dos parâmetros de incremento fixos (X, Y, E, R), o sistema permite uma funcionalidade de
+        <strong>programação por objeto</strong>. Cada objeto possui uma área de código JavaScript
+        onde o usuário pode definir transformações dinâmicas baseadas em funções.
+      </p>
+
+      <div class="code-block">
+        <pre><code>// Exemplo de código customizado para rotação senoidal
+object.setRotation(Math.sin(angle) * 0.5);
+
+// Exemplo de movimento circular
+object.setTranslation(
+  Math.cos(angle) * 0.3,
+  Math.sin(angle) * 0.3
+);</code></pre>
+      </div>
+
+      <p>
+        O código é compilado via <code>new Function('object', 'angle', code)</code> e executado a cada frame
+        antes da renderização. O escopo da função recebe duas variáveis:
+      </p>
+
+      <div class="example-box">
+        <ul>
+          <li><strong>object:</strong> Referência ao DrawableObject, permitindo chamar <code>setTranslation(x, y)</code>, <code>setRotation(r)</code> e <code>setScale(x, y)</code></li>
+          <li><strong>angle:</strong> Contador global que incrementa 0.02 radianos por frame, útil para funções periódicas</li>
+        </ul>
+      </div>
+
+      <p>
+        onde \(A\) é a amplitude, \(\omega\) a frequência angular e \(\phi\) a fase inicial. Com \(\phi_y = \phi_x + \pi/2\),
+        obtém-se trajetória circular de raio \(A\), demonstrando a aplicação de séries de Fourier a gráficos computacionais.
+      </p>
+
+      <div class="theorem-box">
+        <p>
+          <strong>Tratamento de Erros:</strong> O sistema valida o código em tempo de compilação. Erros de sintaxe
+          são capturados no <code>try-catch</code> do construtor <code>Function()</code>, enquanto erros de execução
+          (ex: referências indefinidas) são tratados no método <code>executeCustomCode()</code>. A interface exibe
+          mensagens de erro específicas.
+        </p>
+      </div>
+
+      <h3 id="secao9-4">9.4 Aplicação Prática Interativa</h3>
+
+      <p>
+        A demonstração abaixo integra todos os conceitos das seções anteriores em uma ferramenta interativa
+        de autoria de animações. O usuário pode adicionar polígonos (triângulo, quadrado, pentágono, hexágono),
+        ajustar transformações via controles numéricos, e programar comportamentos customizados via JavaScript.
+      </p>
+
+      <div class="demo-box" style="display: flex; justify-content: center; padding: 1rem 0;">
+        <iframe
+          src="./animationInteractiv/index.html"
+          width="1000"
+          height="650"
+          style="border: none; border-radius: 8px; min-width: 1000px;"
+        ></iframe>
+      </div>
+
+      <p class="demo-note">
+        <strong>Instruções de uso:</strong> Clique nos ícones de formas geométricas à esquerda para adicionar objetos.
+        Para cada objeto, ajuste os parâmetros X (translação horizontal), Y (translação vertical), E (escala) e
+        R (rotação) para definir incrementos por frame. Expanda "Anime com Código Customizado (JS)" para programar
+        transformações dinâmicas usando funções trigonométricas e a variável <code>angle</code>.
+      </p>
+
+      <div class="example-box">
+        <p><strong>Exercícios Sugeridos:</strong></p>
+        <ol>
+          <li>Crie um quadrado e configure R = 0.02 para observar rotação uniforme em torno do centróide</li>
+          <li>Use código customizado <code>object.setScale(1 + Math.sin(angle) * 0.3, 1 + Math.sin(angle) * 0.3)</code> para pulsação periódica</li>
+          <li>Combine translação incremental (X = 0.005) com rotação customizada para movimento helicoidal</li>
+          <li>Adicione múltiplos pentágonos com fases diferentes: <code>Math.sin(angle + 0.5 * id)</code> para efeito cascata</li>
+        </ol>
+      </div>
+
     </article>
   </main>
 
