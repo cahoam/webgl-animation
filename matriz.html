@@ -159,7 +159,7 @@
             width: 180px;
         }
         .info-section {
-            max-width: 250px;
+            max-width: 280px;
         }
         .info-box {
             background: #111;
@@ -176,7 +176,7 @@
             margin-bottom: 4px;
             font-size: 0.65rem;
         }
-        .formula {
+        /* .formula {
             font-family: 'Courier New', monospace;
             background: #000;
             padding: 4px 6px;
@@ -184,6 +184,43 @@
             margin-top: 4px;
             font-size: 0.9rem;
             color: #aaa;
+        } */
+        .shape-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        .shape-btn {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .shape-btn:hover {
+            border-color: #4a90e2;
+            transform: scale(1.05);
+        }
+        .shape-btn.active {
+            border-color: #4a90e2;
+            background: #222;
+        }
+        .shape-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #666;
+            transition: fill 0.2s;
+        }
+        .shape-btn:hover svg,
+        .shape-btn.active svg {
+            fill: #4a90e2;
         }
         .canvas-wrapper {
             flex: 1;
@@ -238,7 +275,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <p>Insira valores na matriz 2×2 e observe a transformação aplicada ao triângulo • Arraste o canvas para mover a visualização</p>
+            <p>Insira valores na matriz 2×2 e observe a transformação aplicada à forma selecionada • Arraste o canvas para mover a visualização</p>
         </div>
 
         <div class="main-content">
@@ -298,10 +335,27 @@
                     </div>
 
                     <div class="section info-section">
-                        <div class="section-title">Fórmula</div>
-                        <div class="info-box">
+                        <div class="section-title">Formas</div>
+                        <!-- <div class="info-box">
                             <strong>Multiplicação Matriz × Vetor</strong>
                             <div class="formula">x' = a×x + b×y<br>y' = c×x + d×y</div>
+                        </div> -->
+                        <div class="shape-selector">
+                            <button class="shape-btn active" onclick="selectShape('triangle')" id="btn-triangle" title="Triângulo">
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="12,4 20,20 4,20"/>
+                                </svg>
+                            </button>
+                            <button class="shape-btn" onclick="selectShape('rectangle')" id="btn-rectangle" title="Retângulo">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="5" y="8" width="14" height="8"/>
+                                </svg>
+                            </button>
+                            <button class="shape-btn" onclick="selectShape('square')" id="btn-square" title="Quadrado">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="6" y="6" width="12" height="12"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -347,12 +401,44 @@
             };
         }
 
-        // Triângulo original (coordenadas matemáticas)
-        const originalTriangle = [
-            { x: 0, y: 0 },
-            { x: 2, y: 0 },
-            { x: 1, y: 2 }
-        ];
+        // Formas geométricas disponíveis
+        const shapes = {
+            triangle: [
+                { x: 0, y: 0 },
+                { x: 2, y: 0 },
+                { x: 1, y: 2 }
+            ],
+            rectangle: [
+                { x: 0, y: 0 },
+                { x: 3, y: 0 },
+                { x: 3, y: 1.5 },
+                { x: 0, y: 1.5 }
+            ],
+            square: [
+                { x: 0, y: 0 },
+                { x: 2, y: 0 },
+                { x: 2, y: 2 },
+                { x: 0, y: 2 }
+            ]
+        };
+
+        // Forma atualmente selecionada
+        let currentShape = 'triangle';
+        let originalShape = shapes[currentShape];
+
+        // Função para selecionar forma
+        function selectShape(shapeName) {
+            currentShape = shapeName;
+            originalShape = shapes[shapeName];
+
+            // Atualiza botões
+            document.querySelectorAll('.shape-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`btn-${shapeName}`).classList.add('active');
+
+            draw();
+        }
 
         // Presets de transformações
         const presets = {
@@ -417,23 +503,26 @@
             ctx.stroke();
 
             // Desenha vértices
-            ctx.setLineDash([]);
-            vertices.forEach((vertex, index) => {
-                const canvasPoint = toCanvasCoords(vertex);
-                ctx.beginPath();
-                ctx.arc(canvasPoint.x, canvasPoint.y, 4, 0, Math.PI * 2);
-                ctx.fillStyle = color;
-                ctx.fill();
+            const showVertices = vertices.length <= 4;
+            if (showVertices) {
+                ctx.setLineDash([]);
+                vertices.forEach((vertex, index) => {
+                    const canvasPoint = toCanvasCoords(vertex);
+                    ctx.beginPath();
+                    ctx.arc(canvasPoint.x, canvasPoint.y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
 
-                // Label do vértice
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 15px Arial';
-                ctx.fillText(
-                    `(${vertex.x.toFixed(1)}, ${vertex.y.toFixed(1)})`,
-                    canvasPoint.x + 8,
-                    canvasPoint.y - 8
-                );
-            });
+                    // Label do vértice
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 15px Arial';
+                    ctx.fillText(
+                        `(${vertex.x.toFixed(1)}, ${vertex.y.toFixed(1)})`,
+                        canvasPoint.x + 8,
+                        canvasPoint.y - 8
+                    );
+                });
+            }
         }
 
         function drawGrid() {
@@ -512,15 +601,15 @@
             ];
 
             // Aplica transformação
-            const transformedTriangle = originalTriangle.map(point =>
+            const transformedShape = originalShape.map(point =>
                 applyMatrix(point, matrix)
             );
 
-            // Desenha triângulo original (tracejado, cinza)
-            drawPolygon(originalTriangle, '#666', 2, true);
+            // Desenha forma original (tracejado, cinza)
+            drawPolygon(originalShape, '#555', 2, true);
 
-            // Desenha triângulo transformado (sólido, azul)
-            drawPolygon(transformedTriangle, '#4a90e2', 2, false);
+            // Desenha forma transformada (sólido, azul)
+            drawPolygon(transformedShape, '#4a90e2', 2, false);
         }
 
         // Event listeners para inputs
