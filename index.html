@@ -265,6 +265,63 @@
       line-height: 1.6;
     }
 
+    .quick-access {
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+
+    .quick-access-title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .demos-grid {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .demo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-white);
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .demo-link:hover {
+      border-color: var(--primary);
+      background: var(--bg-cream);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+    }
+
+    .demo-link svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--primary);
+      stroke: var(--primary);
+      stroke-width: 2;
+    }
+
     /* Footer */
     footer {
       border-top: 2px solid var(--border-dark);
@@ -566,6 +623,21 @@
         margin: 0.5rem 0;
       }
 
+      .quick-access {
+        padding: 1.25rem 1rem;
+      }
+
+      .demos-grid {
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 100%;
+      }
+
+      .demo-link {
+        width: 100%;
+        justify-content: center;
+      }
+
       h2 {
         font-size: 1.75rem;
       }
@@ -581,7 +653,7 @@
 
     /* Print Styles */
     @media print {
-      .progress-bar, .demo-container, .toc-sidebar, .toc-toggle {
+      .progress-bar, .demo-container, .toc-sidebar, .toc-toggle, .quick-access {
         display: none;
       }
 
@@ -858,6 +930,51 @@
       Um guia prático de álgebra linear aplicada à computação gráfica
     </p>
   </header>
+
+  <!-- Quick Access Menu -->
+  <div class="quick-access">
+    <div class="quick-access-title">Demonstrações</div>
+    <div class="demos-grid">
+      <a href="./vetor.html" target="_blank" class="demo-link">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M12 12L19 5M19 5H14M19 5V10"/>
+          <path d="M12 12L5 19M5 19H10M5 19V14"/>
+        </svg>
+        Vetores Interativos
+      </a>
+      <a href="./matriz.html" target="_blank" class="demo-link">
+        <svg viewBox="0 0 24 24">
+          <rect x="4" y="4" width="6" height="6"/>
+          <rect x="14" y="4" width="6" height="6"/>
+          <rect x="4" y="14" width="6" height="6"/>
+          <rect x="14" y="14" width="6" height="6"/>
+        </svg>
+        Transformações Matriciais
+      </a>
+      <a href="./animation2d/index.html" target="_blank" class="demo-link">
+        <svg viewBox="0 0 24 24">
+          <polygon points="12,2 22,12 12,22 2,12"/>
+        </svg>
+        Animação WebGL 2D
+      </a>
+      <a href="./animation3d/index.html" target="_blank" class="demo-link">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+          <path d="M2 17L12 22L22 17"/>
+          <path d="M2 12L12 17L22 12"/>
+        </svg>
+        Animação WebGL 3D
+      </a>
+      <a href="./animationInteractiv/index.html" target="_blank" class="demo-link">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2V6M12 18V22M22 12H18M6 12H2"/>
+          <path d="M19.07 4.93L16.24 7.76M7.76 16.24L4.93 19.07M19.07 19.07L16.24 16.24M7.76 7.76L4.93 4.93"/>
+        </svg>
+        Animação Interativa
+      </a>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <main>
