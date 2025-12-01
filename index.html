@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Álgebra Linear e Computação Gráfica | UFT</title>
+  <title>WebGL e Transformações Lineares</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
@@ -265,15 +265,35 @@
       line-height: 1.6;
     }
 
-    .author-info {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.9375rem;
-      color: var(--text-secondary);
+    /* Footer */
+    footer {
+      border-top: 2px solid var(--border-dark);
+      padding: 2.5rem 2rem;
+      margin-top: 4rem;
+      text-align: center;
     }
 
-    .author-info strong {
+    .footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    footer .author-info {
+      display: inline-block;
+      margin: 0 1.5rem 0.5rem;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    footer .author-info strong {
+      font-weight: 600;
+    }
+
+    .footer-institution {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-dark);
+      font-size: 0.9375rem;
       color: var(--text-primary);
       font-weight: 600;
     }
@@ -495,40 +515,6 @@
       margin: 4rem 0;
     }
 
-    /* Footer */
-    footer {
-      background: var(--accent);
-      color: #cbd5e1;
-      padding: 3rem 2rem;
-      margin-top: 4rem;
-    }
-
-    .footer-content {
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-      font-size: 0.9375rem;
-      line-height: 1.8;
-    }
-
-    .footer-content p {
-      color: #cbd5e1;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-
-    .footer-content strong {
-      color: #f8fafc;
-      font-weight: 600;
-    }
-
-    .footer-divider {
-      width: 60px;
-      height: 2px;
-      background: var(--gold);
-      margin: 1.5rem auto;
-    }
-
     /* Responsive */
     @media (max-width: 1024px) {
       .toc-sidebar {
@@ -569,6 +555,15 @@
 
       main {
         padding: 3rem 1.5rem;
+      }
+
+      footer {
+        padding: 1.5rem 1rem;
+      }
+
+      footer .author-info {
+        display: block;
+        margin: 0.5rem 0;
       }
 
       h2 {
@@ -858,15 +853,10 @@
   <!-- Main Header -->
   <header>
     <div class="header-category">Computação Gráfica • Álgebra Linear</div>
-    <h1>Álgebra Linear e Computação Gráfica:<br>Um Estudo Prático com Animação em WebGL</h1>
+    <h1>WebGL e Transformações Lineares</h1>
     <p class="header-subtitle">
-      Uma ferramenta pedagógica interativa para exploração das transformações lineares 
-      e geométricas aplicadas à renderização gráfica
+      Um guia prático de álgebra linear aplicada à computação gráfica
     </p>
-    <div class="author-info">
-      <strong>Autor:</strong> Calebe Holanda Amaral<br>
-      <strong>Orientadora:</strong> Profa. Dra. Hellena Christina Fernandes Apolinário<br>
-    </div>
   </header>
 
   <!-- Main Content -->
@@ -2916,6 +2906,21 @@ object.setTranslation(
       </p>
     </article>
   </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="author-info">
+        <strong>Autor:</strong> Calebe Holanda Amaral
+      </div>
+      <div class="author-info">
+        <strong>Orientadora:</strong> Profa. Dra. Hellena Christina Fernandes Apolinário
+      </div>
+      <div class="footer-institution">
+        Universidade Federal do Tocantins - UFT
+      </div>
+    </div>
+  </footer>
 
   <script>
     window.addEventListener('scroll', () => {
