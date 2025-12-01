@@ -7,17 +7,17 @@
   <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-  <h2>Rotação: Origem vs. Centróide</h2>
+  <h2>Rotação: Efeito da Translação no Resultado</h2>
 
   <div class="comparison">
     <div class="canvas-box">
-      <h3>Rotação a partir da Origem</h3>
+      <h3>Sem Translação (deformação aparente)</h3>
       <canvas id="canvasOrigin" width="300" height="300"></canvas>
       <div class="rotation-indicator">Ângulo: <span class="rotation-value" id="angleOrigin">0°</span></div>
     </div>
 
     <div class="canvas-box">
-      <h3>Rotação a partir do Centróide</h3>
+      <h3>Com Translação ao Centroide (preserva forma)</h3>
       <canvas id="canvasCentroid" width="300" height="300"></canvas>
       <div class="rotation-indicator">Ângulo: <span class="rotation-value" id="angleCentroid">0°</span></div>
     </div>
