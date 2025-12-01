@@ -69,6 +69,12 @@
             font-weight: bold;
             text-align: center;
         }
+        .matrices-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
         .matrix-display {
             display: flex;
             align-items: center;
@@ -77,11 +83,22 @@
             font-size: 1rem;
             gap: 8px;
         }
+        .matrix-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-right: 8px;
+            font-weight: bold;
+        }
         .bracket {
             font-size: 2.5rem;
             font-weight: 100;
-            color: #4a90e2;
             line-height: 1;
+        }
+        .bracket.vector-1 { 
+            color: #3b82f6; 
+        }
+        .bracket.vector-2 { 
+            color: #ef4444; 
         }
         .matrix-content {
             display: flex;
@@ -115,20 +132,33 @@
         </div>
 
         <div class="matrix-container">
-            <div class="matrix-title">Matriz de Vetores (cada linha = 1 vetor)</div>
-            <div class="matrix-display">
-                <span class="bracket">[</span>
-                <div class="matrix-content" id="matrixContent">
-                    <div class="matrix-row">
-                        <span class="matrix-value vector-1" id="v1x">0.00</span>
-                        <span class="matrix-value vector-1" id="v1y">0.00</span>
+            <div class="matrix-title">Vetores Representados em Matrizes</div>
+            <div class="matrices-wrapper">
+                <!-- Vetor 1 -->
+                <div class="matrix-display">
+                    <span class="matrix-label">v₁ =</span>
+                    <span class="bracket vector-1">[</span>
+                    <div class="matrix-content">
+                        <div class="matrix-row">
+                            <span class="matrix-value vector-1" id="v1x">0.00</span>
+                            <span class="matrix-value vector-1" id="v1y">0.00</span>
+                        </div>
                     </div>
-                    <div class="matrix-row">
-                        <span class="matrix-value vector-2" id="v2x">0.00</span>
-                        <span class="matrix-value vector-2" id="v2y">0.00</span>
-                    </div>
+                    <span class="bracket vector-1">]</span>
                 </div>
-                <span class="bracket">]</span>
+
+                <!-- Vetor 2 -->
+                <div class="matrix-display">
+                    <span class="matrix-label">v₂ =</span>
+                    <span class="bracket vector-2">[</span>
+                    <div class="matrix-content">
+                        <div class="matrix-row">
+                            <span class="matrix-value vector-2" id="v2x">0.00</span>
+                            <span class="matrix-value vector-2" id="v2y">0.00</span>
+                        </div>
+                    </div>
+                    <span class="bracket vector-2">]</span>
+                </div>
             </div>
         </div>
     </div>
